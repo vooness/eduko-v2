@@ -7,7 +7,7 @@ import BookSlider from "@/components/bookslider";
 import EdukoSlider from "@/components/bookslider2";
 import AboutEdukoSection from "@/components/AboutEdukoSection";
 import TeachingMaterials from "@/components/TeachingMaterials";
-import ChatWidget from "@/components/ChatWidget"; // <-- Import ChatWidget
+
 
 export default function Home() {
   return (
@@ -26,8 +26,7 @@ export default function Home() {
       {/* Footer */}
       <Footer />
 
-      {/* Chat Widget (vpravo dole) */}
-      <ChatWidget />
+      
     </div>
   );
 }
