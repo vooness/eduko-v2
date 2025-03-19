@@ -19,31 +19,31 @@ const nextConfig = {
     ];
   },
   webpack: (config, { isServer }) => {
-    // Projdeme všechna pravidla, která pracují s .ts soubory,
-    // a přidáme do jejich "exclude" naši cestu – abychom je nekompilovali.
+    // Upravíme existující pravidla pro .ts soubory, aby nepracovala s cestou public/ekonomika1/story_content
     config.module.rules.forEach((rule) => {
       if (
         rule.test &&
         rule.test.toString().includes('ts') &&
-        // Ujistíme se, že se jedná o pravidla, která mají možnost "exclude"
-        Array.isArray(rule.exclude) || !rule.exclude
+        (!rule.exclude || Array.isArray(rule.exclude))
       ) {
         rule.exclude = rule.exclude ? [].concat(rule.exclude) : [];
         rule.exclude.push(/public\/ekonomika1\/story_content/);
       }
     });
-
-    // A zároveň přidáme pravidlo, které říká, že .ts soubory v dané složce mají být
-    // zpracovány jako asset/resource (tj. jen zkopírovány a jejich URL vrácena)
+    // Přidáme nové pravidlo pro soubory .ts v public/ekonomika1/story_content, aby byly zpracovány jako asset/resource
     config.module.rules.push({
       test: /\.ts$/,
       include: /public\/ekonomika1\/story_content/,
       type: "asset/resource",
+      parser: {
+        dataUrlCondition: {
+          maxSize: 0, // Vynutí, aby se soubor vždy emitoval jako samostatný asset
+        },
+      },
       generator: {
         filename: "static/media/[name][ext]",
       },
     });
-
     return config;
   },
 };
