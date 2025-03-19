@@ -18,6 +18,18 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // Tohle pravidlo zachytí všechny .ts soubory v adresáři public/ekonomika1/story_content
+    config.module.rules.push({
+      test: /\.ts$/,
+      include: /public\/ekonomika1\/story_content/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/media/[name][ext]",
+      },
+    });
+    return config;
+  },
 };
 
 module.exports = nextConfig;
