@@ -19,31 +19,34 @@ const nextConfig = {
     ];
   },
   webpack: (config, { isServer }) => {
-    // Upravíme existující pravidla pro .ts soubory, aby nepracovala s cestou public/ekonomika1/story_content
+    // Projdeme všechna pravidla pro .ts soubory a přidáme naši cestu do "exclude",
+    // aby tyto soubory nebyly zpracovávány standardním TS loaderem.
     config.module.rules.forEach((rule) => {
       if (
         rule.test &&
-        rule.test.toString().includes('ts') &&
-        (!rule.exclude || Array.isArray(rule.exclude))
+        rule.test.toString().includes("ts")
       ) {
         rule.exclude = rule.exclude ? [].concat(rule.exclude) : [];
         rule.exclude.push(/public\/ekonomika1\/story_content/);
       }
     });
-    // Přidáme nové pravidlo pro soubory .ts v public/ekonomika1/story_content, aby byly zpracovány jako asset/resource
+
+    // Přidáme nové pravidlo pro .ts soubory v public/ekonomika1/story_content,
+    // aby byly zpracovány jako statické assety bez parsování
     config.module.rules.push({
       test: /\.ts$/,
       include: /public\/ekonomika1\/story_content/,
-      type: "asset/resource",
-      parser: {
-        dataUrlCondition: {
-          maxSize: 0, // Vynutí, aby se soubor vždy emitoval jako samostatný asset
+      type: "javascript/auto",
+      use: [
+        {
+          loader: "file-loader",
+          options: {
+            name: "static/media/[name].[ext]",
+          },
         },
-      },
-      generator: {
-        filename: "static/media/[name][ext]",
-      },
+      ],
     });
+
     return config;
   },
 };
