@@ -32,7 +32,7 @@ const exercisesData: Exercise[] = [
     difficulty: "Lehké",
     cover: "/imgs/cover.jpg",
     // Cesta do složky public/ekonomika1-druhypokus/story.html
-    link: "/ekonomika1-druhypokus/story.html",
+    link: "/Ekonomika1-druhypokus/story.html",
   },
   {
     name: "Test s okamžitou zpětnou vazbou",
@@ -41,7 +41,7 @@ const exercisesData: Exercise[] = [
     difficulty: "Lehké",
     cover: "/imgs/cover.jpg",
     // Cesta do složky public/ekonomika1-Feedback/story.html
-    link: "/ekonomika1-Feedback/story.html",
+    link: "/Ekonomika1-Feedback/story.html",
   },
 ];
 
