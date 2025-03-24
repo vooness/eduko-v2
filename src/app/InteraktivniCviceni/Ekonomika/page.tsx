@@ -14,102 +14,34 @@ interface Exercise {
   link: string;
 }
 
+// Upravené pole jen se třemi testy
 const exercisesData: Exercise[] = [
   {
-    name: "Rozpočet firmy",
+    name: "Základní test z Ekonomiky",
     type: "Quiz",
     grade: "1. ročník",
     difficulty: "Lehké",
-    cover: "/images/rozpocet-cover.jpg",
+    cover: "/imgs/cover.jpg",
+    // Cesta do složky public/ekonomika1/story.html
     link: "/ekonomika1/story.html",
   },
   {
-    name: "Analýza trhu",
-    type: "Drag & Drop",
-    grade: "2. ročník",
-    difficulty: "Střední",
-    cover: "/images/analyza-cover.jpg",
-    link: "/articulate/analyza-trhu/story.html",
-  },
-  {
-    name: "Závazky a pohledávky",
-    type: "Tabulka",
-    grade: "3. ročník",
-    difficulty: "Těžké",
-    cover: "/images/zavazky-cover.jpg",
-    link: "/articulate/zavazky/story.html",
-  },
-  {
-    name: "Výpočet daní",
-    type: "Výpočet",
-    grade: "4. ročník",
-    difficulty: "Těžké",
-    cover: "/images/dane-cover.jpg",
-    link: "/articulate/vypocet-dani/story.html",
-  },
-  {
-    name: "Mzdové výpočty",
-    type: "Simulace",
-    grade: "2. ročník",
-    difficulty: "Střední",
-    cover: "/images/mzdy-cover.jpg",
-    link: "/articulate/mzdove-vypocty/story.html",
-  },
-  {
-    name: "Ekonomické modely",
+    name: "Opakovací test z Ekonomiky",
     type: "Quiz",
-    grade: "3. ročník",
-    difficulty: "Lehké",
-    cover: "/images/modely-cover.jpg",
-    link: "/articulate/ekonomicke-modely/story.html",
-  },
-  {
-    name: "Finanční plány",
-    type: "Pexeso",
     grade: "1. ročník",
     difficulty: "Lehké",
-    cover: "/images/finplan-cover.jpg",
-    link: "/articulate/financni-plany/story.html",
+    cover: "/imgs/cover.jpg",
+    // Cesta do složky public/ekonomika1-druhypokus/story.html
+    link: "/ekonomika1-druhypokus/story.html",
   },
   {
-    name: "Náklady a výnosy",
-    type: "Tabulka",
-    grade: "4. ročník",
-    difficulty: "Střední",
-    cover: "/images/naklady-cover.jpg",
-    link: "/articulate/naklady-vynosy/story.html",
-  },
-  {
-    name: "Marketingové strategie",
-    type: "Simulace",
-    grade: "3. ročník",
-    difficulty: "Těžké",
-    cover: "/images/marketing-cover.jpg",
-    link: "/articulate/marketingove-strategie/story.html",
-  },
-  {
-    name: "Účetní doklady",
-    type: "Drag & Drop",
-    grade: "2. ročník",
-    difficulty: "Střední",
-    cover: "/images/ucetni-cover.jpg",
-    link: "/articulate/ucetni-doklady/story.html",
-  },
-  {
-    name: "Investiční plány",
-    type: "Výpočet",
-    grade: "4. ročník",
-    difficulty: "Těžké",
-    cover: "/images/investice-cover.jpg",
-    link: "/articulate/investicni-plany/story.html",
-  },
-  {
-    name: "Obchodní smlouvy",
+    name: "Test s okamžitou zpětnou vazbou",
     type: "Quiz",
-    grade: "3. ročník",
+    grade: "1. ročník",
     difficulty: "Lehké",
-    cover: "/images/smlouvy-cover.jpg",
-    link: "/articulate/obchodni-smlouvy/story.html",
+    cover: "/imgs/cover.jpg",
+    // Cesta do složky public/ekonomika1-Feedback/story.html
+    link: "/ekonomika1-Feedback/story.html",
   },
 ];
 
@@ -156,9 +88,10 @@ export default function EkonomikaPage() {
 
         {/* Nadpis a popis */}
         <div className="max-w-4xl w-full text-center mb-10">
-          <h1 className="text-5xl font-extrabold text-white mb-4">Cvičení z Ekonomiky</h1>
+          <h1 className="text-5xl font-extrabold text-white mb-4">Testy z Ekonomiky</h1>
           <p className="text-lg text-gray-300 mb-6">
-            Procvičte si ekonomické znalosti a rozšiřte své dovednosti. Níže můžete vyhledávat a filtrovat cvičení.
+            Zde najdete tři různé typy testů z Ekonomiky – od základů, přes opakování chyb, až po okamžitou zpětnou vazbu.
+            Níže můžete vyhledávat a filtrovat.
           </p>
 
           {/* Vyhledávání a filtry */}
@@ -237,17 +170,16 @@ export default function EkonomikaPage() {
 
               <button
                 className="mt-4 px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition-colors"
-                // Otevře odkaz v nové záložce:
                 onClick={() => window.open(exercise.link, "_blank")}
               >
-                Spustit cvičení
+                Spustit test
               </button>
             </div>
           ))}
 
           {filteredExercises.length === 0 && (
             <div className="col-span-full text-center text-gray-300 mt-6">
-              <p>Žádné cvičení neodpovídá zadaným kritériím.</p>
+              <p>Žádné testy neodpovídají zadaným kritériím.</p>
             </div>
           )}
         </div>
