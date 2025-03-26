@@ -31,6 +31,10 @@ const Navbar = () => {
       name: "BIOLOGIE",
       link: "/InteraktivniCviceni/Biologie",
     },
+    {
+      name: "CHEMIE",
+      link: "/InteraktivniCviceni/Chemie",
+    },
   ];
 
   useEffect(() => {

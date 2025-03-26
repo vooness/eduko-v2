@@ -83,7 +83,7 @@ const HeroSection = () => {
     href="/InteraktivniCviceni"
     className="w-full max-w-xs px-5 py-2  sm:py-3 border-2 border-green-600 text-white font-medium rounded-full bg-green-600 hover:text-white transition text-center"
   >
-    Interaktivní cvičení →
+    Vyzkoušejte interaktivní cvičení →
   </a>
   
 </div>
