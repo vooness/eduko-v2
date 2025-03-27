@@ -60,18 +60,16 @@ export default function Model3DPage() {
   // Detekce mobilu
   const [isMobile, setIsMobile] = useState(false);
 
-  // ANIMACE
+  // ANIMACE – animace se spustí hned od začátku
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
   const clockRef = useRef(new THREE.Clock());
+  const [animPlaying] = useState(true); // Animace běží vždy
 
-  // Animace se spustí hned od začátku
-  const [animPlaying, setAnimPlaying] = useState(true);
-
-  // 1) Nové: exposure pro zvýšení jasu (tone mapping)
+  // exposure pro zvýšení jasu (tone mapping)
   const [exposure, setExposure] = useState(1.0);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
 
-  // Sledujeme změnu velikosti
+  // Detekce změny velikosti obrazovky
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -81,7 +79,7 @@ export default function Model3DPage() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Uložení autoRotate a rotationSpeed do ref
+  // Uložení autoRotate a rotationSpeed do referencí
   useEffect(() => {
     autoRotateRef.current = autoRotate;
   }, [autoRotate]);
@@ -89,7 +87,7 @@ export default function Model3DPage() {
     rotationSpeedRef.current = rotationSpeed;
   }, [rotationSpeed]);
 
-  // 1) Inicializace scény
+  // Inicializace scény
   useEffect(() => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(sceneBg);
@@ -103,11 +101,9 @@ export default function Model3DPage() {
     camera.position.set(0, 2, 10);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    
-    // 2) Nastavení tone mappingu a výchozí exposure
+    // Nastavení tone mappingu a exposure
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = exposure;
-    
     renderer.setSize(window.innerWidth, window.innerHeight);
     rendererRef.current = renderer;
 
@@ -136,7 +132,7 @@ export default function Model3DPage() {
     controls.minDistance = 1;
     controls.maxDistance = 30;
 
-    // Načteme model
+    // Načtení modelu
     const loader = new GLTFLoader();
     loader.load(
       "/3DModel/3d.glb",
@@ -149,14 +145,14 @@ export default function Model3DPage() {
           const mixer = new THREE.AnimationMixer(gltf.scene);
           mixerRef.current = mixer;
 
-          // Zkusíme najít "Chair-boat flip"
+          // Zkusíme najít "Chair-boat flip" nebo použijeme první animaci
           let clip = gltf.animations.find((c: { name: string }) => c.name === "Chair-boat flip");
           if (!clip) {
             clip = gltf.animations[0];
           }
           if (clip) {
             const action = mixer.clipAction(clip);
-            // Spustíme animaci, pokud animPlaying = true
+            // Animace se spustí, protože animPlaying je vždy true
             if (animPlaying) {
               action.play();
             }
@@ -174,12 +170,12 @@ export default function Model3DPage() {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Rotace
+      // Rotace modelu
       if (autoRotateRef.current && gltfSceneRef.current) {
         gltfSceneRef.current.rotation.y += rotationSpeedRef.current;
       }
 
-      // Update animací
+      // Aktualizace animací
       const delta = clockRef.current.getDelta();
       if (mixerRef.current) {
         mixerRef.current.update(delta);
@@ -198,7 +194,6 @@ export default function Model3DPage() {
     };
     window.addEventListener("resize", handleResize);
 
-    // Úklid
     return () => {
       window.removeEventListener("resize", handleResize);
       if (mountRef.current) {
@@ -207,20 +202,19 @@ export default function Model3DPage() {
     };
   }, []);
 
-  // 2) Aktualizace světel
+  // Aktualizace intenzity světel
   useEffect(() => {
     if (ambientLightRef.current) {
       ambientLightRef.current.intensity = ambientIntensity;
     }
   }, [ambientIntensity]);
-
   useEffect(() => {
     if (directionalLightRef.current) {
       directionalLightRef.current.intensity = directionalIntensity;
     }
   }, [directionalIntensity]);
 
-  // 3) Aktualizace pozadí scény
+  // Aktualizace pozadí scény
   useEffect(() => {
     const scene = gltfSceneRef.current?.parent;
     if (scene && scene instanceof THREE.Scene) {
@@ -228,7 +222,7 @@ export default function Model3DPage() {
     }
   }, [sceneBg]);
 
-  // 4) Přebarvení a nastavení roughness/metalness
+  // Přebarvení modelu a nastavení roughness/metalness
   useEffect(() => {
     const scene = gltfSceneRef.current;
     if (!scene) return;
@@ -239,7 +233,7 @@ export default function Model3DPage() {
         const material = mesh.material as THREE.MeshStandardMaterial;
         if (!material) return;
 
-        // Barvy
+        // Nastavení barev podle kategorie
         const cat = getMeshCategory(mesh.name);
         if (cat === "C" && colorC !== "") {
           material.color.set(colorC);
@@ -251,53 +245,25 @@ export default function Model3DPage() {
           material.color.set(colorCylinder);
         }
 
-        // Roughness & Metalness
+        // Nastavení roughness & metalness
         material.roughness = modelRoughness;
         material.metalness = modelMetalness;
       }
     });
   }, [colorC, colorH, colorCylinder, modelRoughness, modelMetalness]);
 
-  // 5) Nové: Sledujeme změny exposure
+  // Sledujeme změny exposure
   useEffect(() => {
     if (rendererRef.current) {
       rendererRef.current.toneMappingExposure = exposure;
     }
   }, [exposure]);
 
-  // Reset barev
+  // Reset barev – nyní se nastaví na výchozí hodnoty
   const resetColors = () => {
-    setColorC("");
-    setColorH("");
-    setColorCylinder("");
-  };
-
-  // Tlačítko na vypnutí/zapnutí animace
-  const toggleAnimation = () => {
-    if (!mixerRef.current) return;
-
-    // Získáme seznam animací
-    const root = mixerRef.current.getRoot();
-    const animClips = (root as any).animations as THREE.AnimationClip[] | undefined;
-    if (!animClips || animClips.length === 0) return;
-
-    let clip = animClips.find((c) => c.name === "Chair-boat flip");
-    if (!clip) {
-      clip = animClips[0];
-    }
-    if (!clip) return;
-
-    const action = mixerRef.current.clipAction(clip);
-    if (!action) return;
-
-    // Přepínáme animaci
-    if (!animPlaying) {
-      action.reset().play();
-      setAnimPlaying(true);
-    } else {
-      action.stop();
-      setAnimPlaying(false);
-    }
+    setColorC("#000000");
+    setColorH("#ffffff");
+    setColorCylinder("#4444ff");
   };
 
   return (
@@ -505,7 +471,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* Reset Colors + Anim Button */}
+          {/* Reset Colors tlačítko */}
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               style={{
@@ -519,20 +485,6 @@ export default function Model3DPage() {
               onClick={resetColors}
             >
               Reset Colors
-            </button>
-
-            <button
-              style={{
-                backgroundColor: "#444",
-                color: "#fff",
-                border: "none",
-                padding: "0.5rem",
-                borderRadius: "0.25rem",
-                cursor: "pointer",
-              }}
-              onClick={toggleAnimation}
-            >
-              {animPlaying ? "Zastavit animaci" : "Spustit animaci"}
             </button>
           </div>
         </div>
