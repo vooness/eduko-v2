@@ -111,12 +111,12 @@ export default function Model3DPage() {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    // Ambient Light
+    // Ambientní osvětlení
     const ambientLight = new THREE.AmbientLight(0xffffff, ambientIntensity);
     scene.add(ambientLight);
     ambientLightRef.current = ambientLight;
 
-    // Directional Light
+    // Směrové osvětlení
     const directionalLight = new THREE.DirectionalLight(
       0xffffff,
       directionalIntensity
@@ -245,7 +245,7 @@ export default function Model3DPage() {
           material.color.set(colorCylinder);
         }
 
-        // Nastavení roughness & metalness
+        // Nastavení drsnosti a kovovosti
         material.roughness = modelRoughness;
         material.metalness = modelMetalness;
       }
@@ -335,10 +335,10 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* 3) Ambient Light */}
+          {/* 3) Ambientní osvětlení */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-              Ambient Light:
+              Ambientní osvětlení:
             </label>
             <input
               type="range"
@@ -353,10 +353,10 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* 4) Directional Light */}
+          {/* 4) Směrové osvětlení */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-              Directional Light:
+              Směrové osvětlení:
             </label>
             <input
               type="range"
@@ -371,7 +371,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* 5) Barva pozadí scény */}
+          {/* 5) Pozadí scény */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Pozadí scény:
@@ -383,10 +383,10 @@ export default function Model3DPage() {
             />
           </div>
 
-          {/* 6) Roughness */}
+          {/* 6) Drsnost */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-              Roughness:
+              Drsnost:
             </label>
             <input
               type="range"
@@ -401,10 +401,10 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* 7) Metalness */}
+          {/* 7) Kovovost */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-              Metalness:
+              Kovovost:
             </label>
             <input
               type="range"
@@ -455,9 +455,11 @@ export default function Model3DPage() {
             />
           </div>
 
-          {/* 11) Exposure */}
+          {/* 11) Expozice */}
           <div>
-            <label style={{ color: "#fff", marginRight: "0.5rem" }}>Exposure:</label>
+            <label style={{ color: "#fff", marginRight: "0.5rem" }}>
+              Expozice:
+            </label>
             <input
               type="range"
               min="0"
@@ -471,7 +473,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* Reset Colors tlačítko */}
+          {/* Resetovat barvy tlačítko */}
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               style={{
@@ -484,7 +486,7 @@ export default function Model3DPage() {
               }}
               onClick={resetColors}
             >
-              Reset Colors
+              Resetovat barvy
             </button>
           </div>
         </div>
