@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-// Pole s JEDINÝM cvičením v chemii
+// Přidáme druhý objekt pro animaci
 const exercisesData = [
   {
     name: "Interaktivní 3D model",
@@ -13,6 +13,13 @@ const exercisesData = [
     grade: "1. ročník",
     difficulty: "Lehké",
     path: "/InteraktivniCviceni/Chemie/3DModel",
+  },
+  {
+    name: "Chemická animace",
+    type: "Animace",
+    grade: "1. ročník",
+    difficulty: "Lehké",
+    path: "/InteraktivniCviceni/Chemie/Animace",
   },
 ];
 
@@ -66,7 +73,7 @@ export default function ChemiePage() {
         <div className="max-w-4xl w-full text-center mb-10">
           <h1 className="text-5xl font-extrabold text-white mb-4">Cvičení z Chemie</h1>
           <p className="text-lg text-gray-300 mb-6">
-            Vyzkoušejte si interaktivní 3D model a zdokonalte své znalosti chemie!
+            Vyzkoušejte si interaktivní 3D model a prohlédněte si chemickou animaci!
           </p>
 
           {/* Vyhledávání a filtry */}
@@ -104,6 +111,7 @@ export default function ChemiePage() {
               <option value="Simulace">Simulace</option>
               <option value="Pexeso">Pexeso</option>
               <option value="3D Model">3D Model</option>
+              <option value="Animace">Animace</option>
             </select>
 
             <select

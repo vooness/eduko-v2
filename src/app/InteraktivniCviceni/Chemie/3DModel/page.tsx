@@ -39,20 +39,22 @@ export default function Model3DPage() {
   const [colorH, setColorH] = useState("");
   const [colorCylinder, setColorCylinder] = useState("");
 
-  // Výchozí intenzity pro světlejší model
+  // Výchozí intenzity pro světlo
   const [ambientIntensity, setAmbientIntensity] = useState(1.0);
-  const [directionalIntensity, setDirectionalIntensity] = useState(0.8);
+
+  // **Upraveno**: Směrové osvětlení na 1.50
+  const [directionalIntensity, setDirectionalIntensity] = useState(1.5);
 
   // Reference na světla
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
   const directionalLightRef = useRef<THREE.DirectionalLight | null>(null);
 
-  // Pozadí scény
-  const [sceneBg, setSceneBg] = useState("#111111");
+  // **Upraveno**: Pozadí scény RGB(72, 96, 97) → "#486061"
+  const [sceneBg, setSceneBg] = useState("#486061");
 
-  // Roughness a Metalness
+  // **Upraveno**: Kovovost (metalness) na 0.25
   const [modelRoughness, setModelRoughness] = useState(0.5);
-  const [modelMetalness, setModelMetalness] = useState(0.0);
+  const [modelMetalness, setModelMetalness] = useState(0.25);
 
   // Stav panelu (collapsible)
   const [panelOpen, setPanelOpen] = useState(true);
@@ -116,7 +118,7 @@ export default function Model3DPage() {
     scene.add(ambientLight);
     ambientLightRef.current = ambientLight;
 
-    // Směrové osvětlení
+    // **Upraveno**: Směrové osvětlení na 1.50
     const directionalLight = new THREE.DirectionalLight(
       0xffffff,
       directionalIntensity
@@ -247,6 +249,7 @@ export default function Model3DPage() {
 
         // Nastavení drsnosti a kovovosti
         material.roughness = modelRoughness;
+        // **Upraveno**: Kovovost 0.25
         material.metalness = modelMetalness;
       }
     });
