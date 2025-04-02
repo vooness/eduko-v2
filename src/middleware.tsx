@@ -12,10 +12,18 @@ export function middleware(req: NextRequest) {
   }
 
   // Získání hlavičky referer
-  const referer = req.headers.get("referer") || "";
+  const refererHeader = req.headers.get("referer") || "";
 
-  // Kontrola, zda referer začíná na https://online.flexibooks.cz
-  if (!referer.startsWith("https://online.flexibooks.cz")) {
+  // Ověříme, zda hostname refereru je online.flexibooks.cz
+  let validReferer = false;
+  try {
+    const refererUrl = new URL(refererHeader);
+    validReferer = refererUrl.hostname === "online.flexibooks.cz";
+  } catch (error) {
+    validReferer = false;
+  }
+
+  if (!validReferer) {
     return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
   }
 
