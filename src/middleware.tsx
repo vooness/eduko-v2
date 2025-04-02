@@ -5,29 +5,41 @@ export function middleware(req: NextRequest) {
   console.log("Middleware initialized");
 
   const url = req.nextUrl;
+  const tokenFromUrl = url.searchParams.get("token");
 
-  // Pokud už se nacházíte na stránce s odepřeným přístupem, nepřesměrovávat znovu.
+  // Token uložený v cookies (pokud existuje)
+  const tokenFromCookies = req.cookies.get("token")?.value;
+
+  // Platný token – nová hodnota
+  const validToken = "k8!@s0#9l5$q3^r7&p1*m6%v4";
+
+  // Pokud uživatel už je na /Pristup-odepren, nepřesměrovávat znovu
   if (url.pathname.startsWith("/Pristup-odepren")) {
     return NextResponse.next();
   }
 
-  // Získáme host (doménu) z hlavičky.
-  const host = req.headers.get("host") || "";
+  // Pokud token v cookies nebo URL odpovídá platnému tokenu
+  if (tokenFromUrl === validToken || tokenFromCookies === validToken) {
+    const response = NextResponse.next();
 
-  // Pokud host obsahuje "i-eduko.cz", kontrolujeme referer.
-  if (host.includes("i-eduko.cz")) {
-    const referer = req.headers.get("referer") || "";
-    // Pokud referer neobsahuje "online.flexibooks.cz", přístup bude odepřen.
-    if (!referer || !referer.includes("online.flexibooks.cz")) {
-      console.log("Direct access na i-eduko.cz - přístup odepřen");
-      return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
+    // Pokud token pochází z URL a není v cookies, uložíme jej
+    if (tokenFromUrl === validToken && tokenFromCookies !== validToken) {
+      response.cookies.set("token", tokenFromUrl, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+      });
+      console.log("Token uložen do cookies");
     }
+
+    return response;
   }
 
-  return NextResponse.next();
+  // Přesměrování na stránku s odepřením přístupu
+  return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
 }
 
-// Matcher pro všechny stránky kromě API, _next a favicon.ico.
+// Konfigurace matcheru pro všechny stránky kromě API, _next a favicon.ico
 export const config = {
   matcher: ["/((?!api|_next|favicon.ico).*)"],
 };
