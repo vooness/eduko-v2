@@ -11,16 +11,16 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Zjistíme aktuální doménu z URL (např. i-eduko.cz nebo online.flexibooks.cz)
+  // Zjistíme aktuální doménu z URL
   const currentHost = url.hostname;
 
-  // Pokud požadavek přichází přes i-eduko.cz, ověříme referer
+  // Pokud požadavek přichází na i-eduko.cz, ověříme, zda referer pochází z online.flexibooks.cz
   if (currentHost === "i-eduko.cz") {
     const refererHeader = req.headers.get("referer") || "";
     let validReferer = false;
     try {
       const refererUrl = new URL(refererHeader);
-      // Ověříme, zda hostname refereru je online.flexibooks.cz
+      // Přístup povolíme pouze, pokud referer pochází z online.flexibooks.cz
       validReferer = refererUrl.hostname === "online.flexibooks.cz";
     } catch (error) {
       validReferer = false;
