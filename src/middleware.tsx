@@ -11,21 +11,26 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Zjistíme aktuální doménu z URL
-  const currentHost = url.hostname;
+  // Zjistíme aktuální doménu. Použijeme hlavičku host, protože req.nextUrl.hostname nemusí odpovídat při proxy
+  const currentHost = req.headers.get("host") || "";
 
-  // Pokud požadavek přichází na i-eduko.cz, ověříme, zda referer pochází z online.flexibooks.cz
-  if (currentHost === "i-eduko.cz") {
-    const refererHeader = req.headers.get("referer") || "";
-    let validReferer = false;
+  // Pokud požadavek míří na i-eduko.cz, ověříme, zda referer pochází z online.flexibooks.cz
+  if (currentHost.startsWith("i-eduko.cz")) {
+    const refererHeader = req.headers.get("referer");
+
+    // Pokud není referer přítomen, blokujeme přístup
+    if (!refererHeader) {
+      return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
+    }
+
     try {
       const refererUrl = new URL(refererHeader);
-      // Přístup povolíme pouze, pokud referer pochází z online.flexibooks.cz
-      validReferer = refererUrl.hostname === "online.flexibooks.cz";
+      // Pokud hostname refereru není online.flexibooks.cz, blokujeme přístup
+      if (refererUrl.hostname !== "online.flexibooks.cz") {
+        return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
+      }
     } catch (error) {
-      validReferer = false;
-    }
-    if (!validReferer) {
+      // Pokud se nepodaří vytvořit URL z refereru, blokujeme přístup
       return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
     }
   }
