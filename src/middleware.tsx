@@ -11,20 +11,23 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Získání hlavičky referer
-  const refererHeader = req.headers.get("referer") || "";
+  // Zjistíme aktuální doménu z URL (např. i-eduko.cz nebo online.flexibooks.cz)
+  const currentHost = url.hostname;
 
-  // Ověříme, zda hostname refereru je online.flexibooks.cz
-  let validReferer = false;
-  try {
-    const refererUrl = new URL(refererHeader);
-    validReferer = refererUrl.hostname === "online.flexibooks.cz";
-  } catch (error) {
-    validReferer = false;
-  }
-
-  if (!validReferer) {
-    return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
+  // Pokud požadavek přichází přes i-eduko.cz, ověříme referer
+  if (currentHost === "i-eduko.cz") {
+    const refererHeader = req.headers.get("referer") || "";
+    let validReferer = false;
+    try {
+      const refererUrl = new URL(refererHeader);
+      // Ověříme, zda hostname refereru je online.flexibooks.cz
+      validReferer = refererUrl.hostname === "online.flexibooks.cz";
+    } catch (error) {
+      validReferer = false;
+    }
+    if (!validReferer) {
+      return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
+    }
   }
 
   return NextResponse.next();
