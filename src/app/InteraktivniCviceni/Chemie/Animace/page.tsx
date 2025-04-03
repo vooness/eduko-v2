@@ -38,10 +38,14 @@ const AnimationPage: React.FC = () => {
 
   const handleFullScreen = () => {
     if (videoRef.current) {
+      // Pokud je dokument již ve fullscreen režimu, ukončíme jej
       if (document.fullscreenElement) {
         document.exitFullscreen();
-      } else {
+      } else if (videoRef.current.requestFullscreen) {
         videoRef.current.requestFullscreen();
+      } else if ((videoRef.current as any).webkitEnterFullscreen) {
+        // Podpora pro iOS Safari
+        (videoRef.current as any).webkitEnterFullscreen();
       }
     }
   };
