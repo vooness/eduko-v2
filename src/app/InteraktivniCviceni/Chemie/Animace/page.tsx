@@ -86,7 +86,7 @@ const AnimationPage: React.FC = () => {
         playsInline
         style={videoStyle}
       >
-        <source src="/Animace/testchemie.mp4" type="video/mp4" />
+        <source src="/Animace/chemie5.mp4" type="video/mp4" />
         Váš prohlížeč nepodporuje přehrávání videa.
       </video>
     </div>
