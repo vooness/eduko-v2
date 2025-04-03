@@ -38,14 +38,10 @@ const AnimationPage: React.FC = () => {
 
   const handleFullScreen = () => {
     if (videoRef.current) {
-      // Pokud je dokument již ve fullscreen režimu, ukončíme jej
       if (document.fullscreenElement) {
         document.exitFullscreen();
-      } else if (videoRef.current.requestFullscreen) {
+      } else {
         videoRef.current.requestFullscreen();
-      } else if ((videoRef.current as any).webkitEnterFullscreen) {
-        // Podpora pro iOS Safari
-        (videoRef.current as any).webkitEnterFullscreen();
       }
     }
   };
@@ -90,7 +86,7 @@ const AnimationPage: React.FC = () => {
         playsInline
         style={videoStyle}
       >
-        <source src="/Animace/chemie5.mp4" type="video/mp4" />
+        <source src="/Animace/chemie.mp4" type="video/mp4" />
         Váš prohlížeč nepodporuje přehrávání videa.
       </video>
     </div>

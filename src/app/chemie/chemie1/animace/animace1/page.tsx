@@ -6,17 +6,19 @@ const AnimationPage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const containerStyle: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
     height: "100vh",
     backgroundColor: "#000",
-    position: "relative",
+    overflow: "hidden",
   };
 
   const videoStyle: React.CSSProperties = {
-    width: "90%",
-    maxWidth: "600px",
+    width: "100vw",
+    height: "100vh",
+    objectFit: "cover",
   };
 
   const buttonStyle: React.CSSProperties = {
@@ -86,7 +88,7 @@ const AnimationPage: React.FC = () => {
         playsInline
         style={videoStyle}
       >
-        <source src="/Animace/testchemie.mp4" type="video/mp4" />
+        <source src="/Animace/chemie.mp4" type="video/mp4" />
         Váš prohlížeč nepodporuje přehrávání videa.
       </video>
     </div>
