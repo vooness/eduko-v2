@@ -1504,7 +1504,6 @@
       <string id="close">Zavřít</string>
       <string id="closed_captions">Titulky</string>
       <string id="closedcaptions_shortcut">Zapnout/vypnout popisky</string>
-      <string id="continue">Pokračujte</string>
       <string id="continueresponsive">Pokračujte</string>
       <string id="ctrl_key">Ctrl</string>
       <string id="desktop_start">Zahájit kurz</string>
@@ -1593,6 +1592,7 @@
       <string id="video_transcript_select_track">Vybrat stopu</string>
       <string id="video_transcript_title">Přepisy</string>
       <string id="zoom_to_fit">Přizpůsobit velikosti</string>
+      <string id="continue">Pokračujte</string>
     </string_table>
   </string_tables>
   <fonts>

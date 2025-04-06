@@ -3,63 +3,34 @@
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 interface Exercise {
   name: string;
-  type: string;
-  grade: string;
-  difficulty: string;
   cover: string;
   link: string;
 }
 
-// Upravené pole jen se třemi testy
+// Pole se třemi cvičeními s názvy přímo dle zadání
 const exercisesData: Exercise[] = [
   {
-    name: "Základní test z Ekonomiky",
-    type: "Quiz",
-    grade: "1. ročník",
-    difficulty: "Lehké",
+    name: "A. Procvičovací úlohy bez možnosti opravy",
     cover: "/imgs/cover.jpg",
-    // Cesta do složky public/ekonomika1/story.html
     link: "/ekonomika1/story.html",
   },
   {
-    name: "Opakovací test z Ekonomiky",
-    type: "Quiz",
-    grade: "1. ročník",
-    difficulty: "Lehké",
+    name: "B. Procvičovací úlohy s možností jedné opravy za 50 % bodů",
     cover: "/imgs/cover.jpg",
-    // Cesta do složky public/ekonomika1-druhypokus/story.html
     link: "/Ekonomika1-druhypokus/story.html",
   },
   {
-    name: "Test s okamžitou zpětnou vazbou",
-    type: "Quiz",
-    grade: "1. ročník",
-    difficulty: "Lehké",
+    name: "C. Procvičovací úlohy s okamžitým zobrazením správné odpovědi v případě chyby",
     cover: "/imgs/cover.jpg",
-    // Cesta do složky public/ekonomika1-Feedback/story.html
     link: "/Ekonomika1-Feedback/story.html",
   },
 ];
 
 export default function EkonomikaPage() {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterGrade, setFilterGrade] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [filterDifficulty, setFilterDifficulty] = useState("");
-
-  const filteredExercises = exercisesData.filter((exercise) => {
-    const matchName = exercise.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchGrade = filterGrade ? exercise.grade === filterGrade : true;
-    const matchType = filterType ? exercise.type === filterType : true;
-    const matchDifficulty = filterDifficulty ? exercise.difficulty === filterDifficulty : true;
-
-    return matchName && matchGrade && matchType && matchDifficulty;
-  });
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
@@ -86,76 +57,21 @@ export default function EkonomikaPage() {
           </button>
         </div>
 
-        {/* Nadpis a popis */}
+        {/* Nadpis */}
         <div className="max-w-4xl w-full text-center mb-10">
-          <h1 className="text-5xl font-extrabold text-white mb-4">Testy z Ekonomiky</h1>
-          <p className="text-lg text-gray-300 mb-6">
-            Zde najdete tři různé typy testů z Ekonomiky – od základů, přes opakování chyb, až po okamžitou zpětnou vazbu.
-            Níže můžete vyhledávat a filtrovat.
-          </p>
-
-          {/* Vyhledávání a filtry */}
-          <div className="flex flex-wrap md:flex-nowrap gap-4 justify-center items-center mb-6 mt-6">
-            <input
-              type="text"
-              placeholder="Vyhledat cvičení..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow md:flex-none md:w-1/3 px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-
-            <select
-              value={filterGrade}
-              onChange={(e) => setFilterGrade(e.target.value)}
-              className="px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="">Všechny ročníky</option>
-              <option value="1. ročník">1. ročník</option>
-              <option value="2. ročník">2. ročník</option>
-              <option value="3. ročník">3. ročník</option>
-              <option value="4. ročník">4. ročník</option>
-            </select>
-
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="">Všechny typy</option>
-              <option value="Quiz">Quiz</option>
-              <option value="Drag & Drop">Drag & Drop</option>
-              <option value="Tabulka">Tabulka</option>
-              <option value="Výpočet">Výpočet</option>
-              <option value="Simulace">Simulace</option>
-              <option value="Pexeso">Pexeso</option>
-            </select>
-
-            <select
-              value={filterDifficulty}
-              onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="">Všechny obtížnosti</option>
-              <option value="Lehké">Lehké</option>
-              <option value="Střední">Střední</option>
-              <option value="Těžké">Těžké</option>
-            </select>
-          </div>
+          <h1 className="text-5xl font-extrabold text-white mb-4">
+          Ukázka procvičovacích úloh
+          </h1>
+          
         </div>
 
-        {/* Grid layout */}
+        {/* Grid s cvičeními */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl w-full">
-          {filteredExercises.map((exercise, index) => (
+          {exercisesData.map((exercise, index) => (
             <div
               key={index}
               className="relative p-6 bg-gray-800 rounded-xl shadow-lg text-center hover:shadow-2xl transition-shadow"
             >
-              {/* Obtížnost v rohu */}
-              <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-sm rounded">
-                {exercise.difficulty}
-              </div>
-
-              {/* Cover obrázek, pokud existuje */}
               {exercise.cover && (
                 <img
                   src={exercise.cover}
@@ -164,9 +80,9 @@ export default function EkonomikaPage() {
                 />
               )}
 
-              <h2 className="text-2xl font-bold text-white mb-2 mt-4">{exercise.name}</h2>
-              <p className="text-gray-300 mb-1">Typ: {exercise.type}</p>
-              <p className="text-gray-300">Ročník: {exercise.grade}</p>
+              <h2 className="text-xl font-bold text-white mb-2 mt-4">
+                {exercise.name}
+              </h2>
 
               <button
                 className="mt-4 px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition-colors"
@@ -176,12 +92,6 @@ export default function EkonomikaPage() {
               </button>
             </div>
           ))}
-
-          {filteredExercises.length === 0 && (
-            <div className="col-span-full text-center text-gray-300 mt-6">
-              <p>Žádné testy neodpovídají zadaným kritériím.</p>
-            </div>
-          )}
         </div>
       </div>
 
