@@ -2,23 +2,29 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  console.log("Middleware initialized");
-
+  console.log("=== DEBUG MIDDLEWARE START ===");
+  
+  // Získáme aktuální URL a logujeme ji
   const url = req.nextUrl;
+  console.log("Aktuální URL:", url.href);
+  console.log("Pathname:", url.pathname);
 
-  // Pokud už se nacházíte na stránce s odepřeným přístupem, nepřesměrovávat znovu.
+  // Pokud už se nacházíme na stránce s odepřeným přístupem, nepřesměrovávat znovu.
   if (url.pathname.startsWith("/Pristup-odepren")) {
+    console.log("Už jsme na stránce odepřeného přístupu.");
     return NextResponse.next();
   }
 
-  // Získáme token z URL a cookies.
+  // Získáme token z query parametrů a cookies.
   const tokenFromUrl = url.searchParams.get("token");
   const tokenFromCookies = req.cookies.get("token")?.value;
+  console.log("Token z URL:", tokenFromUrl);
+  console.log("Token z Cookies:", tokenFromCookies);
 
-  // Definice platného tokenu.
+  // Definujeme platný token.
   const validToken = "k8!@s0#9l5$q3^r7&p1*m6%v4";
 
-  // Pokud je token platný, povolíme přístup a při potřeby token uložíme do cookies.
+  // Pokud je token platný, povolíme přístup a pokud je token jenom v URL, uložíme ho do cookies.
   if (tokenFromUrl === validToken || tokenFromCookies === validToken) {
     const response = NextResponse.next();
     if (tokenFromUrl === validToken && tokenFromCookies !== validToken) {
@@ -29,27 +35,32 @@ export function middleware(req: NextRequest) {
       });
       console.log("Token uložen do cookies");
     }
+    console.log("Přístup povolen z validního tokenu.");
     return response;
   }
 
   // Pokud token není platný, ověříme, zda je požadavek na i-eduko.cz a zda referer pochází z fraus.cz.
   const host = req.headers.get("host") || "";
+  console.log("Host header:", host);
+
   if (host.includes("i-eduko.cz")) {
     const referer = req.headers.get("referer") || "";
-
-    // Regulární výraz, který ověří, že referer začíná na "http(s)://(www.)?fraus.cz" 
-    // a následně může obsahovat jakýkoli text (cesty či parametry jsou ignorovány).
+    console.log("Referer header:", referer);
+    
+    // Regulární výraz ověřující, že referer začíná na http://fraus.cz, https://fraus.cz nebo s www.
     const validFrausRefererPattern = /^https?:\/\/(www\.)?fraus\.cz(\/.*)?/;
-
+    
     if (validFrausRefererPattern.test(referer)) {
+      console.log("Referer pochází z fraus.cz, přístup povolen.");
       return NextResponse.next();
     } else {
-      console.log("Přístup odepřen - referer není z fraus.cz");
+      console.log("Referer nepochází z fraus.cz, přístup odepřen.");
       return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
     }
   }
 
-  // Ve všech ostatních případech je přístup odepřen.
+  // Ve všech ostatních případech bude přístup odepřen.
+  console.log("Host nespadající pod podmínky, přístup odepřen.");
   return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
 }
 
