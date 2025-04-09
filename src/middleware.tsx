@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
 
   const url = req.nextUrl;
 
-  // Pokud již jste na stránce s odepřeným přístupem, nepřesměrovávat.
+  // Pokud už se nacházíte na stránce s odepřeným přístupem, nepřesměrovávat znovu.
   if (url.pathname.startsWith("/Pristup-odepren")) {
     return NextResponse.next();
   }
@@ -18,7 +18,7 @@ export function middleware(req: NextRequest) {
   // Definice platného tokenu.
   const validToken = "k8!@s0#9l5$q3^r7&p1*m6%v4";
 
-  // Pokud je token platný, umožníme přístup a v případě potřeby token uložíme do cookies.
+  // Pokud je token platný, povolíme přístup a při potřeby token uložíme do cookies.
   if (tokenFromUrl === validToken || tokenFromCookies === validToken) {
     const response = NextResponse.next();
     if (tokenFromUrl === validToken && tokenFromCookies !== validToken) {
@@ -32,22 +32,19 @@ export function middleware(req: NextRequest) {
     return response;
   }
 
-  // Pokud token není platný, ověříme, zda je požadavek na i-eduko.cz a má správný referer.
+  // Pokud token není platný, ověříme, zda je požadavek na i-eduko.cz a zda referer pochází z fraus.cz.
   const host = req.headers.get("host") || "";
   if (host.includes("i-eduko.cz")) {
     const referer = req.headers.get("referer") || "";
 
-    // Regulární výraz ověřující, že URL začíná na "https://online.flexibooks.cz/9788088473374"
-    // a volitelně následuje lomítko a číslice (např. /1, /15, atd.).
-    const validOnlineRefererPattern = /^https:\/\/online\.flexibooks\.cz\/9788088473374(\/\d+)?/;
+    // Regulární výraz, který ověří, že referer začíná na "http(s)://(www.)?fraus.cz" 
+    // a následně může obsahovat jakýkoli text (cesty či parametry jsou ignorovány).
+    const validFrausRefererPattern = /^https?:\/\/(www\.)?fraus\.cz(\/.*)?/;
 
-    // Regulární výraz, který povolí jakoukoli URL začínající na fraus.cz (s http nebo https) a libovolným dalším obsahem.
-    const validFrausRefererPattern = /^https?:\/\/fraus\.cz(\/.*)?/;
-
-    if (validOnlineRefererPattern.test(referer) || validFrausRefererPattern.test(referer)) {
+    if (validFrausRefererPattern.test(referer)) {
       return NextResponse.next();
     } else {
-      console.log("Direct access na i-eduko.cz s neplatným referer - přístup odepřen");
+      console.log("Přístup odepřen - referer není z fraus.cz");
       return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
     }
   }
