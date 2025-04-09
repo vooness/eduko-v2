@@ -32,14 +32,17 @@ export function middleware(req: NextRequest) {
     return response;
   }
 
-  // Pokud token není platný, ověříme, zda je požadavek na i-eduko.cz a zda má správný referer.
+  // Pokud token není platný, ověříme, zda je požadavek na i-eduko.cz a má správný referer.
   const host = req.headers.get("host") || "";
   if (host.includes("i-eduko.cz")) {
     const referer = req.headers.get("referer") || "";
-    // Použijeme regulární výraz, který ověřuje, že URL začíná na "https://online.flexibooks.cz/9788088473374"
-    // a volitelně následuje lomítko a číslice (např. "/1", "/15").
+    // Regulární výraz pro ověření, že URL začíná na "https://online.flexibooks.cz/9788088473374"
+    // a volitelně je následována lomítkem a čísly (např. /1, /15, atd.)
     const validRefererPattern = /^https:\/\/online\.flexibooks\.cz\/9788088473374(\/\d+)?/;
-    if (validRefererPattern.test(referer)) {
+    // Také povolíme přístup, pokud je referer přesně "http://fraus.cz/redirect.php"
+    const validRedirectUrl = "http://fraus.cz/redirect.php";
+
+    if (validRefererPattern.test(referer) || referer === validRedirectUrl) {
       return NextResponse.next();
     } else {
       console.log("Direct access na i-eduko.cz s neplatným referer - přístup odepřen");
