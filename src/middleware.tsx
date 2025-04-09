@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
 
   const url = req.nextUrl;
 
-  // Pokud už se nacházíte na stránce s odepřeným přístupem, nepřesměrovávat znovu.
+  // Pokud již jste na stránce s odepřeným přístupem, nepřesměrovávat.
   if (url.pathname.startsWith("/Pristup-odepren")) {
     return NextResponse.next();
   }
@@ -36,13 +36,15 @@ export function middleware(req: NextRequest) {
   const host = req.headers.get("host") || "";
   if (host.includes("i-eduko.cz")) {
     const referer = req.headers.get("referer") || "";
-    // Regulární výraz pro ověření, že URL začíná na "https://online.flexibooks.cz/9788088473374"
-    // a volitelně je následována lomítkem a čísly (např. /1, /15, atd.)
-    const validRefererPattern = /^https:\/\/online\.flexibooks\.cz\/9788088473374(\/\d+)?/;
-    // Také povolíme přístup, pokud je referer přesně "http://fraus.cz/redirect.php"
-    const validRedirectUrl = "http://fraus.cz/redirect.php";
 
-    if (validRefererPattern.test(referer) || referer === validRedirectUrl) {
+    // Regulární výraz ověřující, že URL začíná na "https://online.flexibooks.cz/9788088473374"
+    // a volitelně následuje lomítko a číslice (např. /1, /15, atd.).
+    const validOnlineRefererPattern = /^https:\/\/online\.flexibooks\.cz\/9788088473374(\/\d+)?/;
+
+    // Regulární výraz, který povolí jakoukoli URL začínající na fraus.cz (s http nebo https) a libovolným dalším obsahem.
+    const validFrausRefererPattern = /^https?:\/\/fraus\.cz(\/.*)?/;
+
+    if (validOnlineRefererPattern.test(referer) || validFrausRefererPattern.test(referer)) {
       return NextResponse.next();
     } else {
       console.log("Direct access na i-eduko.cz s neplatným referer - přístup odepřen");
