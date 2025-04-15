@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
   console.log("Aktuální URL:", url.href);
   console.log("Pathname:", url.pathname);
 
-  // Pokud jsme již na stránce s odepřeným přístupem, pokračujeme bez dalších kontrol.
+  // Pokud se již nacházíme na stránce s odepřeným přístupem, pokračujeme bez dalších kontrol.
   if (url.pathname.startsWith("/Pristup-odepren")) {
     console.log("Na stránce odepřeného přístupu, pokračujeme.");
     return NextResponse.next();
@@ -21,14 +21,15 @@ export function middleware(req: NextRequest) {
   if (isSpecialPage) {
     console.log("Detekována speciální stránka (animace/3D modely).");
     // Platný speciální token – 10 znaků, obsahující symboly
-    const validAnimToken = "r5^k2!v9@j";
+    const validAnimToken = "testToken123";
     const animTokenFromUrl = url.searchParams.get("animToken");
     const animTokenFromCookies = req.cookies.get("animToken")?.value;
     console.log("animToken z URL:", animTokenFromUrl);
     console.log("animToken z Cookies:", animTokenFromCookies);
 
+    // Ověření platnosti speciálního tokenu – povolíme přístup, pokud je token správný
     if (animTokenFromUrl === validAnimToken || animTokenFromCookies === validAnimToken) {
-      // Pokud byl animToken předán v URL a ještě není uložen v cookies, uložíme jej a odstraníme z URL.
+      // Pokud byl animToken předán v URL a ještě není uložen v cookies, uložíme jej a odstraníme z URL (aby nebyl viditelný).
       if (animTokenFromUrl === validAnimToken && animTokenFromCookies !== validAnimToken) {
         const response = NextResponse.next();
         response.cookies.set("animToken", animTokenFromUrl, {
@@ -48,16 +49,17 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/Pristup-odepren", req.url));
     }
   } else {
-    // Pro všechny ostatní stránky – kontrola učitelského tokenu.
+    // Pro všechny ostatní stránky – kontrola učitelského (obecného) tokenu.
     console.log("Běžná stránka – kontrola učitelského tokenu.");
     const tokenFromUrl = url.searchParams.get("token");
     const tokenFromCookies = req.cookies.get("token")?.value;
-    console.log("Token z URL:", tokenFromUrl);
-    console.log("Token z Cookies:", tokenFromCookies);
+    console.log("Teacher token z URL:", tokenFromUrl);
+    console.log("Teacher token z Cookies:", tokenFromCookies);
 
     // Platný učitelský token
     const validTeacherToken = "k8!@s0#9l5$q3^r7&p1*m6%v4";
     if (tokenFromUrl === validTeacherToken || tokenFromCookies === validTeacherToken) {
+      // Uložíme token do cookies, pokud ještě tam není, a povolíme přístup
       if (tokenFromUrl === validTeacherToken && tokenFromCookies !== validTeacherToken) {
         const response = NextResponse.next();
         response.cookies.set("token", tokenFromUrl, {
