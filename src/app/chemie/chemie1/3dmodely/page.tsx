@@ -10,6 +10,61 @@ const modelsData = [
     description: "Popis 3D modelu...", // Nepovinný popis
     path: "/chemie/chemie1/3dmodely/3dmodel1", // Opravená absolutní cesta
   },
+  {
+    name: "Interaktivní 3D model",
+    description: "s019 2.1_oxid uhličitý kalot", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel2", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.1.1_Orbital_1s", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel3", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.1.2_Orbital_2s", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel4", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.1.3_Orbital_3s", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel5", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.2.1_Orbital_2p_y", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel6", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.2.2_Orbital_2p_z", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel7", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.2.3_Orbital_2p_x", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel8", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.2.4_podslupka_2p", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel9", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "s035 3.2.3.1_Orbital_3d_xy", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel10", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "Popis 3D modelu...", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel1", // Opravená absolutní cesta
+  },
+   {
+    name: "Interaktivní 3D model",
+    description: "Popis 3D modelu...", // Nepovinný popis
+    path: "/chemie/chemie1/3dmodely/3dmodel1", // Opravená absolutní cesta
+  },
 ];
 
 export default function Model3DPage() {
