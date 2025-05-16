@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <!-- Created using Storyline 360 x64 - http://www.articulate.com  -->
-  <!-- version: 3.97.34031.0 -->
-  <title>Ekonomika1-Feedback</title>
+  <!-- version: 3.99.34516.0 -->
+  <title>Ekonomika1-Feedback ( v 5 )</title>
   <meta http-equiv="x-ua-compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,shrink-to-fit=no,minimal-ui"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -24,20 +24,20 @@
       tinCanPresent: false,
       cmi5Present: false,
       aoSupport: false,
-      scale: 'noscale',
+      scale: 'Scaled',
       captureRc: false,
       browserSize: 'optimal',
       bgColor: '#282828',
-      features: 'DropInAcc,DropInBase,DropInCore,DropInInteractions,DropInVideo,LayerPresentAsDialog,MathExpressions,MultipleQuizTracking,UpdatedThemeEditor',
+      features: 'DropInBase,JsApiBasics,MathExpressions,MorphTransition,MultipleQuizTracking,NewCaptionsFormat,PlayerSizeOption,TextEntryCharacterLimit',
       themeName: 'unified',
       preloaderColor: '#FFFFFF',
       suppressAnalytics: false,
       productChannel: 'stable',
       publishSource: 'storyline',
-      aid: 'aid|20536a6e-5d6c-496f-9743-83a9e0f3d634',
-      cid: 'f6b43644-a187-4394-a47d-761d2689ad28',
-      playerVersion: '3.97.34031.0',
-      publishTimestamp: '2025-03-24T12:04:00.4995076Z',
+      aid: 'aid|bf8ec5c1-b5d7-45b1-b1c5-f8cc6a3b4b1b',
+      cid: 'ab2d09d9-1ccf-404d-9c30-4a496010b276',
+      playerVersion: '3.99.34516.0',
+      publishTimestamp: '2025-05-16T07:09:15.0858521Z',
       maxIosVideoElements: 10,
       connectionSettings: { message: 'Jste%20offline.%20Pokus%20o%20op%C4%9Btovn%C3%A9%20p%C5%99ipojen%C3%AD...', useDarkTheme: false, mode: 'disabled' },
       hasFeature: function(feature) {
@@ -62,6 +62,15 @@
       }
 
     };
+
+    if (window.flagsUnderTest != null) {
+      window.globals.features = window.flagsUnderTest.reduce((accum, feature) => {
+        if (!accum.includes(feature)) {
+          accum.push(feature);
+        }
+        return accum;
+      }, window.globals.features.split(',')).join();
+    }
   </script>
   <script>
     var isIe11 = ('ActiveXObject' in window || window.MSBlobBuilder != null)
@@ -73,7 +82,7 @@
   </script>
 
   <script>
-    if (window.globals.hasFeature('MultiLanguageSinglePackageSupport')) {
+    if (window.globals.hasFeature('NewAiCourseTranslation')) {
       
       
     }
@@ -142,7 +151,7 @@
   </script>
 
   <div class="mobile-load-title-overlay" style="display: none">
-    <div class="mobile-load-title">Ekonomika1-Feedback</div>
+    <div class="mobile-load-title">Ekonomika1-Feedback ( v 5 )</div>
   </div>
 
   <div class="mobile-chrome-warning"></div>

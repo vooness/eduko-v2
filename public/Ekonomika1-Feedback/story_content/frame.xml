@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bwFrame xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default_layout="pxabnsnfns00001000101" textdirection="ltr" textengine="DirectWrite" device="false" fontscale="100" captionFontScale="100" kbshortcuts="false" skip_nav_enabled="true" chromeless="false" outputtype="undefined" theme="unified" themeAccentColor="0x4FBDF4">
+<bwFrame xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default_layout="pxabnsnfns00001000101" textdirection="ltr" textengine="DirectWrite" device="false" fontscale="100" captionFontScale="100" kbshortcuts="false" skip_nav_enabled="true" chromeless="false" preventUpscale="true" outputtype="undefined" theme="unified" themeAccentColor="0x4FBDF4">
   <layouts>
     <layout name="npnxnanbsnfns00001000101" font="Open Sans SemiBold" controllayout="npnxnanbsnfns00001000101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
     <layout name="pxabnsnfns00001000101" font="Open Sans SemiBold" controllayout="pxabnsnfns00001000101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
@@ -15,7 +15,7 @@
         <options>
           <option name="title_enabled" value="true">
             <options>
-              <option name="title_text" value="Ekonomika1-Feedback" />
+              <option name="title_text" value="Ekonomika1-Feedback ( v 5 )" />
             </options>
           </option>
           <option name="logo_enabled" value="false">
@@ -1504,6 +1504,7 @@
       <string id="close">Zavřít</string>
       <string id="closed_captions">Titulky</string>
       <string id="closedcaptions_shortcut">Zapnout/vypnout popisky</string>
+      <string id="comma_key">Čárka</string>
       <string id="continueresponsive">Pokračujte</string>
       <string id="ctrl_key">Ctrl</string>
       <string id="desktop_start">Zahájit kurz</string>
@@ -1526,6 +1527,7 @@
       <string id="next">DALŠÍ</string>
       <string id="next_shortcut">Další</string>
       <string id="outline">Nabídka</string>
+      <string id="period_key">Tečka</string>
       <string id="playback_speed_normal">Normální</string>
       <string id="playback_speed_title">Rychlost přehrávání</string>
       <string id="playpause_shortcut">Přehrát / pozastavit</string>
@@ -1537,6 +1539,7 @@
       <string id="progress_minutes">minuty</string>
       <string id="progress_second">sekunda</string>
       <string id="progress_seconds">sekundy</string>
+      <string id="question_mark_key">Otazník</string>
       <string id="replay_shortcut">Znovu přehrát</string>
       <string id="resources">Zdroje</string>
       <string id="restart">Restartovat</string>
