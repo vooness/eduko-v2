@@ -8,7 +8,7 @@ const animationsData = [
   {
     name: "Chemická animace",
     description: "Popis animace...", // Nepovinný popis
-    path: "/chemie/chemie1/animace/animace1", // Cesta k animaci
+    path: "/chemie/chemie1/animace/26_priprava_roztoku", // Cesta k animaci
   },
 ];
 
