@@ -70,7 +70,7 @@ export default function Model3DPage() {
   const [cameraY, setCameraY] = useState(0.5);  // Výška kamery
   
   // Cesta k modelu - pevně daná pro konkrétní stránku
-  const modelPath = "/3DModel/s035_3.2.4.6_orbital_4f_2.glb";
+  const modelPath = "/3DModel/s035_3.2.4.6_orbital_4f_-2.glb";
   
   // Detekce změny velikosti obrazovky
   useEffect(() => {

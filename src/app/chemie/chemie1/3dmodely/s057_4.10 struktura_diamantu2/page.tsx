@@ -70,7 +70,7 @@ export default function Model3DPage() {
   const [cameraY, setCameraY] = useState(0.5);  // Výška kamery
   
   // Cesta k modelu - pevně daná pro konkrétní stránku
-  const modelPath = "/3DModel/s057_4.10 struktura diamantu2.glb";
+  const modelPath = "/3DModel/s057_4.10_struktura_diamantu2.glb";
   
   // Detekce změny velikosti obrazovky
   useEffect(() => {

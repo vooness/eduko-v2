@@ -2,19 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-
-// TypeScript definice pro dynamicky načítané knihovny
-interface GLTFResult {
-  scene: THREE.Group;
-  animations: THREE.AnimationClip[];
-  scenes: THREE.Group[];
-  cameras: THREE.Camera[];
-  asset: object;
-}
-
-// Správné importy pro Next.js
-let GLTFLoader: any;
-let OrbitControls: any;
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 export default function Model3DPage() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -33,10 +22,9 @@ export default function Model3DPage() {
   // Dynamická detekce částí modelu
   const [modelParts, setModelParts] = useState<{[key: string]: {name: string, color: string}}>({}); 
 
-  // OPRAVENÉ výchozí intenzity pro světlo - vyšší hodnoty pro zlatý vzhled
-  const [ambientIntensity, setAmbientIntensity] = useState(0.8); // Zvýšeno z 0.4
-  const [directionalIntensity, setDirectionalIntensity] = useState(1.5); // Zvýšeno z 1.0
-  
+  // Výchozí intenzity pro světlo
+  const [ambientIntensity, setAmbientIntensity] = useState(1.0);
+  const [directionalIntensity, setDirectionalIntensity] = useState(1.5);
   // Reference na světla
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
   const directionalLightRef = useRef<THREE.DirectionalLight | null>(null);
@@ -45,17 +33,17 @@ export default function Model3DPage() {
   const spotLightsRef = useRef<THREE.SpotLight[]>([]);
   const pointLightsRef = useRef<THREE.PointLight[]>([]);
   
-  // OPRAVENÉ intenzity světel - vyšší pro lepší osvětlení
-  const [spotLightIntensity, setSpotLightIntensity] = useState(0.6); // Zvýšeno z 0.3
-  const [pointLightIntensity, setPointLightIntensity] = useState(0.4); // Zvýšeno z 0.2
+  // Intenzita bodových a spot světel
+  const [spotLightIntensity, setSpotLightIntensity] = useState(0.8);
+  const [pointLightIntensity, setPointLightIntensity] = useState(0.6);
 
-  // OPRAVENÉ pozadí scény - světlejší pro lepší kontrast
-  const [sceneBg, setSceneBg] = useState("#404040"); // Změněno z #2a2a2a
+  // Pozadí scény RGB(72, 96, 97) → "#486061"
+  const [sceneBg, setSceneBg] = useState("#486061");
 
-  // Kovovost (metalness) a drsnost (roughness) - OPRAVENÉ pro zlatý vzhled
-  const [modelRoughness, setModelRoughness] = useState(1.0); // Správná hodnota pro realistický vzhled
-  const [modelMetalness, setModelMetalness] = useState(0.8); // Zvýšeno z 0
-
+  // Kovovost (metalness) a drsnost (roughness)
+  const [modelRoughness, setModelRoughness] = useState(0.3); // Sníženo pro větší lesklost
+  const [modelMetalness, setModelMetalness] = useState(0); // Zvýšeno pro větší lesklost
+  
   // Referenční objekty pro originální materiály
   const originalMaterialsRef = useRef<Map<string, THREE.MeshStandardMaterial>>(new Map());
 
@@ -65,30 +53,24 @@ export default function Model3DPage() {
   // Detekce mobilu
   const [isMobile, setIsMobile] = useState(false);
 
-  // ANIMACE
+  // ANIMACE – animace se spustí hned od začátku
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
   const clockRef = useRef(new THREE.Clock());
-  const [animPlaying] = useState(true);
+  const [animPlaying] = useState(true); // Animace běží vždy
 
-  // OPRAVENÁ exposure pro tone mapping - vyšší pro jasnější vzhled
-  const [exposure, setExposure] = useState(1.5); // Zvýšeno z 1.0
+  // exposure pro zvýšení jasu (tone mapping)
+  const [exposure, setExposure] = useState(10); // Sníženo pro lepší kontrast
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   
   // Reference na OrbitControls
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
   
   // Přiblížení kamery a pozice
-  const [initialZoom, setInitialZoom] = useState(3.5);
-  const [cameraY, setCameraY] = useState(0.5);
+  const [initialZoom, setInitialZoom] = useState(3.5);  // Výchozí zoom - menší hodnota = větší přiblížení
+  const [cameraY, setCameraY] = useState(0.5);  // Výška kamery
   
-  // Cesta k modelu
-  const modelPath = "/3DModel/s122_8.04_sira_8.glb";
-  
-  // OPRAVENÉ - výchozí zachování materiálů FALSE pro správný vzhled
-  const [preserveOriginalMaterials, setPreserveOriginalMaterials] = useState(false);
-
-  // Stav načtení knihoven
-  const [librariesLoaded, setLibrariesLoaded] = useState(false);
+  // Cesta k modelu - pevně daná pro konkrétní stránku
+  const modelPath = "/3DModel/s057_4.10_struktura_diamantu2.glb";
   
   // Detekce změny velikosti obrazovky
   useEffect(() => {
@@ -108,31 +90,9 @@ export default function Model3DPage() {
     rotationSpeedRef.current = rotationSpeed;
   }, [rotationSpeed]);
 
-  // Dynamické načtení knihoven
-  useEffect(() => {
-    const loadLibraries = async () => {
-      try {
-        // Dynamický import pro GLTFLoader
-        const { GLTFLoader: LoaderClass } = await import('three/examples/jsm/loaders/GLTFLoader.js');
-        GLTFLoader = LoaderClass;
-        
-        // Dynamický import pro OrbitControls
-        const { OrbitControls: ControlsClass } = await import('three/examples/jsm/controls/OrbitControls.js');
-        OrbitControls = ControlsClass;
-        
-        setLibrariesLoaded(true);
-      } catch (error) {
-        console.error('Chyba při načítání knihoven:', error);
-      }
-    };
-
-    loadLibraries();
-  }, []);
-
   // Inicializace scény
   useEffect(() => {
-    if (!librariesLoaded) return;
-
+    // Inicializace scény pouze při prvním render
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(sceneBg);
 
@@ -143,48 +103,51 @@ export default function Model3DPage() {
       1000
     );
     
+    // Kamera začíná v pohledu zepředu
     camera.position.set(0, 0, 5);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
-      powerPreference: "high-performance"
+      powerPreference: "high-performance" // Lepší výkon pro komplexní scény
     });
-    
-    // OPRAVENÉ nastavení rendereru pro lepší vzhled
+    // Nastavení tone mappingu a exposure
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = exposure;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.outputColorSpace = THREE.SRGBColorSpace; // Opraveno - Lepší barvy
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
+    renderer.shadowMap.enabled = true; // Zapnutí stínů
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Měkčí stíny
     rendererRef.current = renderer;
 
     if (mountRef.current) {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    // OPRAVENÉ osvětlení pro zlatý vzhled
+    // Ambientní osvětlení
     const ambientLight = new THREE.AmbientLight(0xffffff, ambientIntensity);
     scene.add(ambientLight);
     ambientLightRef.current = ambientLight;
 
-    // Hlavní směrové světlo - teplé osvětlení
-    const directionalLight = new THREE.DirectionalLight(0xfff8dc, directionalIntensity); // Teplá barva
+    // Směrové osvětlení na 1.50
+    const directionalLight = new THREE.DirectionalLight(
+      0xffffff,
+      directionalIntensity
+    );
     directionalLight.position.set(5, 10, 7);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.castShadow = true; // Stíny pro směrové světlo
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
     scene.add(directionalLight);
     directionalLightRef.current = directionalLight;
 
-    // OPRAVENÁ dodatečná světla pro lepší osvětlení
+    // Přidání více světel pro lepší lesklost a odlesky
+    // 1. Přidání spot světel ze čtyř stran
     const spotPositions = [
-      { pos: new THREE.Vector3(5, 5, 0), color: 0xfff8dc }, // Teplá barva
-      { pos: new THREE.Vector3(-5, 5, 0), color: 0xfff8dc },
-      { pos: new THREE.Vector3(0, 5, 5), color: 0xffffff },
-      { pos: new THREE.Vector3(0, 5, -5), color: 0xffffff }
+      { pos: new THREE.Vector3(5, 5, 0), color: 0xffffee },
+      { pos: new THREE.Vector3(-5, 5, 0), color: 0xeeffff },
+      { pos: new THREE.Vector3(0, 5, 5), color: 0xffeeff },
+      { pos: new THREE.Vector3(0, 5, -5), color: 0xeeffee }
     ];
     
     spotPositions.forEach(({ pos, color }) => {
@@ -196,6 +159,7 @@ export default function Model3DPage() {
       spotLightsRef.current.push(spotLight);
     });
     
+    // 2. Přidání bodových světel pro lepší odlesky
     const pointPositions = [
       { pos: new THREE.Vector3(3, -3, 3), color: 0xffffff },
       { pos: new THREE.Vector3(-3, -3, -3), color: 0xffffff },
@@ -210,26 +174,26 @@ export default function Model3DPage() {
       pointLightsRef.current.push(pointLight);
     });
 
-    // OrbitControls
+    // OrbitControls - ovládání kamery myší
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 30;
+    controls.minDistance = 0.5;  // Minimální vzdálenost pro zoom
+    controls.maxDistance = 30;   // Maximální vzdálenost pro zoom
     
-    // Pomocné osy (vypnuté)
+    // Přidat pomocné osy pro ladění (volitelné, ve výchozím stavu vypnuté)
     const axesHelper = new THREE.AxesHelper(5);
     scene.add(axesHelper);
-    axesHelper.visible = false;
+    axesHelper.visible = false;  // Vypnuto pro produkci, pro ladění nastavte na true
 
-    // OPRAVENÁ funkce pro detekci částí modelu
+    // Detekce a kategorizace částí modelu
     function detectModelParts(model: THREE.Group) {
       const foundParts: {[key: string]: {name: string, color: string}} = {};
       const originalMaterialColors: {[key: string]: string} = {};
       
-      // Projít model a zaznamenat původní materiály
-      model.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+      // Nejprve projdeme model a zaznamenáme všechny unikátní materiály a jejich barvy
+      model.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
           const material = mesh.material as THREE.MeshStandardMaterial;
@@ -237,34 +201,42 @@ export default function Model3DPage() {
           if (!material || !material.color) return;
           
           const name = mesh.name.toLowerCase();
+          // Získáme kategorii podle názvu
           let category = getCategoryFromName(name);
           
           if (category && category.length > 0) {
-            // Uložit původní barvu
+            // Uložíme originální barvu
             const colorHex = "#" + material.color.getHexString();
             originalMaterialColors[category] = colorHex;
             
-            // Uložit kompletní původní materiál pro referenci
+            // Uložíme originální materiál pro pozdější referenci
             if (!originalMaterialsRef.current.has(category)) {
+              // Klonujeme materiál, abychom měli nezávislou referenci
               const clonedMaterial = material.clone();
               originalMaterialsRef.current.set(category, clonedMaterial);
             }
+            
+            // Nastavíme drsnost a kovovost pro lepší lesklost
+            material.roughness = modelRoughness;
+            material.metalness = modelMetalness;
+            material.needsUpdate = true;
           }
         }
       });
       
-      // Vytvořit části s původními barvami
-      model.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+      // Nyní vytvoříme části s originálními barvami
+      model.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
           const name = mesh.name.toLowerCase();
           const category = getCategoryFromName(name);
           
           if (category && category.length > 0) {
+            // Pokud již kategorie existuje, přeskočíme
             if (foundParts[category]) return;
             
             const displayName = formatCategoryName(category);
-            const colorHex = originalMaterialColors[category] || "#FFD700"; // Výchozí zlatá
+            const colorHex = originalMaterialColors[category] || "#888888";
             
             foundParts[category] = {
               name: displayName,
@@ -274,20 +246,22 @@ export default function Model3DPage() {
         }
       });
       
+      // Pokud jsme nenašli žádné části, přidáme alespoň jednu výchozí
       if (Object.keys(foundParts).length === 0) {
         foundParts["model"] = {
           name: "Model",
-          color: "#FFD700" // Zlatá barva
+          color: "#888888"
         };
       }
       
-      console.log("Detekované části s původními materiály:", foundParts);
+      console.log("Detekované části s originálními barvami:", foundParts);
       setModelParts(foundParts);
       return foundParts;
     }
     
-    // Pomocné funkce
+    // Pomocná funkce pro získání kategorie z názvu
     function getCategoryFromName(name: string): string {
+      // Speciální případy
       if (name.includes("cylinder") || name.includes("bond")) {
         return "cylinder";
       } else if (name.includes("sphere_3") || name === "sphere_3" || name.startsWith("sphere_3.")) {
@@ -297,11 +271,14 @@ export default function Model3DPage() {
       } else if (name.includes("sphere") && !name.includes("sphere_2") && !name.includes("sphere_3")) {
         return "sphere";
       } else {
+        // Získat první token (znak nebo slovo) před tečkou nebo mezerou
         return name.split(/[.\s]/)[0];
       }
     }
     
+    // Pomocná funkce pro formátování názvu kategorie
     function formatCategoryName(category: string): string {
+      // Konverze na pěkný název pro zobrazení
       if (category === "c") return "Uhlík (C)";
       if (category === "h") return "Vodík (H)";
       if (category === "cylinder") return "Vazby";
@@ -309,41 +286,33 @@ export default function Model3DPage() {
       if (category === "sphere_2") return "Atom 2";
       if (category === "sphere_3") return "Atom 3";
       
+      // Obecné formátování - první písmeno velké
       return category.charAt(0).toUpperCase() + category.slice(1);
     }
 
-    // Načtení modelu s dynamicky načteným GLTFLoader
+    // Načtení modelu
     const loader = new GLTFLoader();
     loader.load(
       modelPath,
-      (gltf: GLTFResult) => {
+      (gltf) => {
+        // Výpis struktury do konzole
         console.log("Model loaded, analyzing structure:");
-        gltf.scene.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+        gltf.scene.traverse((child: { name: any; type: any }) => {
           console.log("Node name:", child.name, "Type:", child.type);
         });
 
-        // OPRAVENÉ nastavení materiálů pro zlatý vzhled
-        gltf.scene.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+        // Nastavení stínů pro všechny meshe v modelu
+        gltf.scene.traverse((child: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material | THREE.Material[], THREE.Object3DEventMap>) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             
-            // APLIKOVAT zlaté materiálové vlastnosti hned při načtení
+            // Nastavení materiálů pro lesklost
             if (mesh.material) {
               const material = mesh.material as THREE.MeshStandardMaterial;
-              
-              // Nastavit zlaté vlastnosti pro realistický vzhled
-              if (!preserveOriginalMaterials) {
-                material.metalness = modelMetalness;
-                material.roughness = modelRoughness;
-                
-                // Pokud je materiál tmavý, nastavit zlatou barvu
-                if (material.color.r < 0.5 && material.color.g < 0.5 && material.color.b < 0.5) {
-                  material.color.setHex(0xFFD700); // Zlatá barva
-                }
-              }
-              
+              material.roughness = modelRoughness;
+              material.metalness = modelMetalness;
               material.needsUpdate = true;
             }
           }
@@ -353,35 +322,41 @@ export default function Model3DPage() {
         const detectedParts = detectModelParts(gltf.scene);
         console.log("Detected model parts:", detectedParts);
 
-        // Vycentrování modelu
+        // DŮLEŽITÉ: Vycentrování modelu - vypočítat bouding box a umístit na střed
         const boundingBox = new THREE.Box3().setFromObject(gltf.scene);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
         
+        // Přesunout model tak, aby jeho střed byl na [0,0,0]
         gltf.scene.position.set(-center.x, -center.y, -center.z);
         
+        // Upravit kameru podle velikosti modelu
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         let cameraDistance = Math.abs(maxDim / (2 * Math.tan(fov / 2)));
         
+        // Přidat rezervu, aby model nebyl u kraje
         cameraDistance *= 1.5;
         
+        // Nastavit kameru na správnou vzdálenost a namířit na střed modelu
         camera.position.set(0, 0, cameraDistance);
         camera.lookAt(0, 0, 0);
         
+        // Ukládat počáteční hodnotu přiblížení pro pozdější reset
         setInitialZoom(cameraDistance);
 
-        // Animace
         if (gltf.animations && gltf.animations.length > 0) {
           const mixer = new THREE.AnimationMixer(gltf.scene);
           mixerRef.current = mixer;
 
+          // Zkusíme najít "Chair-boat flip" nebo použijeme první animaci
           let clip = gltf.animations.find((c: { name: string }) => c.name === "Chair-boat flip");
           if (!clip) {
             clip = gltf.animations[0];
           }
           if (clip) {
             const action = mixer.clipAction(clip);
+            // Animace se spustí, protože animPlaying je vždy true
             if (animPlaying) {
               action.play();
             }
@@ -392,17 +367,19 @@ export default function Model3DPage() {
         scene.add(gltf.scene);
       },
       undefined,
-      (error: any) => console.error("Chyba při načítání modelu:", error)
+      (error) => console.error("Chyba při načítání modelu:", error)
     );
 
     // Animační smyčka
     const animate = () => {
       requestAnimationFrame(animate);
 
+      // Rotace modelu
       if (autoRotateRef.current && gltfSceneRef.current) {
         gltfSceneRef.current.rotation.y += rotationSpeedRef.current;
       }
 
+      // Aktualizace animací
       const delta = clockRef.current.getDelta();
       if (mixerRef.current) {
         mixerRef.current.update(delta);
@@ -428,11 +405,13 @@ export default function Model3DPage() {
         mountRef.current.removeChild(renderer.domElement);
       }
     };
+  // Závislosti omezeny pouze na ty nezbytné, aby nedocházelo k překreslování při každé změně
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [librariesLoaded]);
+  }, []);
 
   // Aktualizace vlastností scény při změně parametrů
   useEffect(() => {
+    // Aktualizace základních světel
     if (ambientLightRef.current) {
       ambientLightRef.current.intensity = ambientIntensity;
     }
@@ -441,44 +420,46 @@ export default function Model3DPage() {
       directionalLightRef.current.intensity = directionalIntensity;
     }
     
+    // Aktualizace intenzity bodových světel
     spotLightsRef.current.forEach(light => {
       light.intensity = spotLightIntensity;
     });
     
+    // Aktualizace intenzity spot světel
     pointLightsRef.current.forEach(light => {
       light.intensity = pointLightIntensity;
     });
     
+    // Aktualizace pozadí scény
     const scene = gltfSceneRef.current?.parent;
     if (scene && scene instanceof THREE.Scene) {
       scene.background = new THREE.Color(sceneBg);
     }
     
+    // Aktualizace expozice (tone mapping)
     if (rendererRef.current) {
       rendererRef.current.toneMappingExposure = exposure;
     }
     
-    // APLIKOVAT materiálové vlastnosti
+    // Aktualizace vlastností materiálů modelu
     if (gltfSceneRef.current) {
-      gltfSceneRef.current.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+      gltfSceneRef.current.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
           if (mesh.material) {
             const material = mesh.material as THREE.MeshStandardMaterial;
-            
-            if (!preserveOriginalMaterials) {
-              material.roughness = modelRoughness;
-              material.metalness = modelMetalness;
-            }
-            
+            material.roughness = modelRoughness;
+            material.metalness = modelMetalness;
             material.needsUpdate = true;
           }
         }
       });
     }
     
+    // Aktualizace kamery
     if (controlsRef.current) {
       const camera = controlsRef.current.object as THREE.PerspectiveCamera;
+      // Zachováme aktuální X pozici, ale aktualizujeme Y a Z
       camera.position.set(camera.position.x, cameraY, initialZoom);
       camera.updateProjectionMatrix();
     }
@@ -492,8 +473,7 @@ export default function Model3DPage() {
     initialZoom, 
     cameraY, 
     modelRoughness, 
-    modelMetalness,
-    preserveOriginalMaterials
+    modelMetalness
   ]);
 
   // Reset barev – nastaví na původní barvy z modelu
@@ -501,9 +481,11 @@ export default function Model3DPage() {
     const scene = gltfSceneRef.current;
     if (!scene) return;
     
+    // Sbírka původních barev podle kategorie
     const originalColors: {[key: string]: string} = {};
     
-    scene.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+    // Projít model a obnovit originální barvy a materiálové vlastnosti
+    scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         const material = mesh.material as THREE.MeshStandardMaterial;
@@ -514,28 +496,28 @@ export default function Model3DPage() {
         const category = getCategoryFromName(name);
         
         if (category) {
+          // Obnovit původní barvu z reference
           if (originalMaterialsRef.current.has(category)) {
             const originalMaterial = originalMaterialsRef.current.get(category);
             if (originalMaterial) {
               material.color.copy(originalMaterial.color);
-              material.roughness = originalMaterial.roughness;
-              material.metalness = originalMaterial.metalness;
               originalColors[category] = "#" + material.color.getHexString();
             }
-          } else {
-            // Pokud nemáme původní materiál, nastavit zlatou barvu
-            material.color.setHex(0xFFD700);
-            originalColors[category] = "#FFD700";
           }
+          
+          // Aktualizovat materiálové vlastnosti
+          material.roughness = modelRoughness;
+          material.metalness = modelMetalness;
           material.needsUpdate = true;
         }
       }
     });
     
+    // Aktualizovat všechny části modelu na původní barvy
     const updatedParts: {[key: string]: {name: string, color: string}} = {};
     
     for (const [key, part] of Object.entries(modelParts)) {
-      const originalColor = originalColors[key] || "#FFD700";
+      const originalColor = originalColors[key] || part.color;
       updatedParts[key] = {
         ...part,
         color: originalColor
@@ -545,6 +527,7 @@ export default function Model3DPage() {
     setModelParts(updatedParts);
   };
   
+  // Pomocná funkce pro získání kategorie, duplikát z detectModelParts
   function getCategoryFromName(name: string): string {
     if (name.includes("cylinder") || name.includes("bond")) {
       return "cylinder";
@@ -559,7 +542,9 @@ export default function Model3DPage() {
     }
   }
 
+  // Opravená funkce pro změnu barvy části modelu
   function changePartColor(key: string, value: string): void {
+    // 1. Aktualizovat stav barev v modelParts
     const updatedParts = { ...modelParts };
     if (updatedParts[key]) {
       updatedParts[key] = {
@@ -569,12 +554,15 @@ export default function Model3DPage() {
       setModelParts(updatedParts);
     }
     
+    // 2. Aktualizovat skutečné barvy v 3D modelu
     const scene = gltfSceneRef.current;
     if (!scene) return;
     
+    // Konvertovat hex barvu na THREE.Color
     const newColor = new THREE.Color(value);
     
-    scene.traverse((child: THREE.Object3D) => { // OPRAVENÝ typ
+    // Projít všechny meshe a aktualizovat barvy podle kategorie
+    scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         const material = mesh.material as THREE.MeshStandardMaterial;
@@ -584,34 +572,18 @@ export default function Model3DPage() {
         const name = mesh.name.toLowerCase();
         const category = getCategoryFromName(name);
         
+        // Pokud kategorie odpovídá klíči, změnit barvu
         if (category === key) {
           material.color.copy(newColor);
-          material.needsUpdate = true;
+          material.needsUpdate = true; // Důležité pro refresh materiálu
         }
       }
     });
   }
 
-  // Načítání knihoven
-  if (!librariesLoaded) {
-    return (
-      <div style={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#2a2a2a",
-        color: "#fff",
-        fontSize: "1.2rem"
-      }}>
-        Načítání 3D knihoven...
-      </div>
-    );
-  }
-
   return (
     <>
+      {/* Tlačítko pro schování/zobrazení panelu */}
       <button
         onClick={() => setPanelOpen(!panelOpen)}
         style={{
@@ -631,6 +603,7 @@ export default function Model3DPage() {
         {panelOpen ? "Schovat panel" : "Zobrazit panel"}
       </button>
 
+      {/* Panel s nastavením */}
       {panelOpen && (
         <div
           style={{
@@ -638,10 +611,10 @@ export default function Model3DPage() {
             top: isMobile ? "5rem" : "3.5rem",
             left: "1rem",
             zIndex: 999,
-            backgroundColor: "rgba(0,0,0,0.8)",
+            backgroundColor: "rgba(0,0,0,0.5)",
             padding: "1rem",
             borderRadius: "0.25rem",
-            maxWidth: "300px",
+            maxWidth: "270px",
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
@@ -649,22 +622,7 @@ export default function Model3DPage() {
             overflowY: "auto"
           }}
         >
-          {/* Kontrola pro zachování původních materiálů */}
-          <div style={{ borderBottom: "1px solid #666", paddingBottom: "0.5rem", marginBottom: "0.5rem" }}>
-            <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-              Zachovat původní materiály:
-            </label>
-            <input
-              type="checkbox"
-              checked={preserveOriginalMaterials}
-              onChange={(e) => setPreserveOriginalMaterials(e.target.checked)}
-            />
-            <div style={{ fontSize: "0.8em", color: "#ccc", marginTop: "0.25rem" }}>
-              Zapnuté = model vypadá jako v GLB vieweru
-            </div>
-          </div>
-
-          {/* Automatická rotace */}
+          {/* 1) Automatická rotace */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Automatická rotace:
@@ -676,7 +634,7 @@ export default function Model3DPage() {
             />
           </div>
 
-          {/* Rychlost rotace */}
+          {/* 2) Rychlost rotace */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Rychlost rotace:
@@ -694,7 +652,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* Ambientní osvětlení */}
+          {/* 3) Ambientní osvětlení */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Ambientní osvětlení:
@@ -712,7 +670,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* Směrové osvětlení */}
+          {/* 4) Směrové osvětlení */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Směrové osvětlení:
@@ -730,7 +688,7 @@ export default function Model3DPage() {
             </span>
           </div>
           
-          {/* Bodová světla */}
+          {/* 5) Bodová světla */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Bodová světla:
@@ -748,7 +706,7 @@ export default function Model3DPage() {
             </span>
           </div>
           
-          {/* Spot světla */}
+          {/* 6) Spot světla */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Spot světla:
@@ -766,7 +724,7 @@ export default function Model3DPage() {
             </span>
           </div>
 
-          {/* Pozadí scény */}
+          {/* 7) Pozadí scény */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Pozadí scény:
@@ -778,46 +736,42 @@ export default function Model3DPage() {
             />
           </div>
 
-          {/* Materiálové vlastnosti - pouze když nejsou zachovány původní */}
-          {!preserveOriginalMaterials && (
-            <>
-              <div>
-                <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-                  Drsnost:
-                </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={modelRoughness}
-                  onChange={(e) => setModelRoughness(Number(e.target.value))}
-                />
-                <span style={{ color: "#fff", marginLeft: "0.5rem" }}>
-                  {modelRoughness.toFixed(2)}
-                </span>
-              </div>
+          <div>
+            <label style={{ color: "#fff", marginRight: "0.5rem" }}>
+              Drsnost:
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={modelRoughness}
+              onChange={(e) => setModelRoughness(Number(e.target.value))}
+            />
+            <span style={{ color: "#fff", marginLeft: "0.5rem" }}>
+              {modelRoughness.toFixed(2)}
+            </span>
+          </div>
 
-              <div>
-                <label style={{ color: "#fff", marginRight: "0.5rem" }}>
-                  Kovovost:
-                </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={modelMetalness}
-                  onChange={(e) => setModelMetalness(Number(e.target.value))}
-                />
-                <span style={{ color: "#fff", marginLeft: "0.5rem" }}>
-                  {modelMetalness.toFixed(2)}
-                </span>
-              </div>
-            </>
-          )}
+          {/* 9) Kovovost */}
+          <div>
+            <label style={{ color: "#fff", marginRight: "0.5rem" }}>
+              Kovovost:
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={modelMetalness}
+              onChange={(e) => setModelMetalness(Number(e.target.value))}
+            />
+            <span style={{ color: "#fff", marginLeft: "0.5rem" }}>
+              {modelMetalness.toFixed(2)}
+            </span>
+          </div>
 
-          {/* Expozice */}
+          {/* 10) Expozice */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Expozice:
@@ -825,7 +779,7 @@ export default function Model3DPage() {
             <input
               type="range"
               min="0"
-              max="5"
+              max="10"
               step="0.1"
               value={exposure}
               onChange={(e) => setExposure(Number(e.target.value))}
@@ -835,7 +789,7 @@ export default function Model3DPage() {
             </span>
           </div>
           
-          {/* Přiblížení */}
+          {/* 11) Počáteční zoom (vzdálenost kamery) */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Přiblížení:
@@ -853,7 +807,7 @@ export default function Model3DPage() {
             </span>
           </div>
           
-          {/* Výška kamery */}
+          {/* 12) Výška kamery */}
           <div>
             <label style={{ color: "#fff", marginRight: "0.5rem" }}>
               Výška kamery:
@@ -917,11 +871,14 @@ export default function Model3DPage() {
               }}
               onClick={() => {
                 if (controlsRef.current && gltfSceneRef.current) {
+                  // Vypočítat střed modelu
                   const boundingBox = new THREE.Box3().setFromObject(gltfSceneRef.current);
                   const center = boundingBox.getCenter(new THREE.Vector3());
                   
+                  // Reset OrbitControls
                   controlsRef.current.reset();
                   
+                  // Nastavení pohledu kamery na střed modelu
                   const camera = controlsRef.current.object as THREE.PerspectiveCamera;
                   camera.position.set(0, 0, initialZoom);
                   camera.lookAt(center);
@@ -945,6 +902,26 @@ export default function Model3DPage() {
           overflow: "hidden",
         }}
       />
+      
+      {/* Debugovací informace - můžete odstranit v produkci */}
+      {false && (
+        <div style={{
+          position: "absolute",
+          bottom: "10px",
+          right: "10px",
+          background: "rgba(0,0,0,0.7)",
+          color: "white",
+          padding: "10px",
+          borderRadius: "5px",
+          maxWidth: "400px",
+          maxHeight: "200px",
+          overflow: "auto",
+          fontSize: "10px"
+        }}>
+          <h4>Detekované části modelu:</h4>
+          <pre>{JSON.stringify(modelParts, null, 2)}</pre>
+        </div>
+      )}
     </>
   );
 }
