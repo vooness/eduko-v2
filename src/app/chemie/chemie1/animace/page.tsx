@@ -8,7 +8,27 @@ const animationsData = [
   {
     name: "Chemická animace",
     description: "Popis animace...", // Nepovinný popis
-    path: "/chemie/chemie1/animace/26_priprava_roztoku", // Cesta k animaci
+    path: "/chemie/chemie1/animace/26_priprava_roztoku",
+  },
+  {
+    name: "Filtrace",
+    description: "Popis filtrace...", 
+    path: "/chemie/chemie1/animace/22-1_filtrace",
+  },
+  {
+    name: "Sedimentace",
+    description: "Popis sedimentace...", 
+    path: "/chemie/chemie1/animace/22-2_sedimentace",
+  },
+  {
+    name: "Příprava roztoku (varianta 2)",
+    description: "Popis druhé varianty přípravy roztoku...", 
+    path: "/chemie/chemie1/animace/27_priprava_roztoku",
+  },
+  {
+    name: "Chemické rovnováhy",
+    description: "Popis chemických rovnováh...", 
+    path: "/chemie/chemie1/animace/77_chemicke_rovnovahy",
   },
 ];
 
