@@ -82,7 +82,7 @@ export default function Model3DPage() {
   const [cameraY, setCameraY] = useState(0.5);
   
   // Cesta k modelu
-  const modelPath = "/s058_4.11_struktura_ledu.glb";
+  const modelPath = "/3DModel/s058_4.11_struktura_ledu.glb";
 
   // Stav načtení knihoven
   const [librariesLoaded, setLibrariesLoaded] = useState(false);

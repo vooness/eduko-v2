@@ -85,6 +85,23 @@ const modelsData = [
     description: "s035 3.2.4.1_orbital_4f_-3", // Nepovinný popis     
     path: "/chemie/chemie1/3dmodely/s035_3.2.4.1_orbital_4f_-3", // Opravená absolutní cesta   
   },
+
+  {
+  name: "Interaktivní 3D model",
+  description: "s035 3.2.4.2_orbital_4f_-2", // Nepovinný popis
+  path: "/chemie/chemie1/3dmodely/s035_3.2.4.2_orbital_4f_-2", // Opravená absolutní cesta
+},
+{
+  name: "Interaktivní 3D model",
+  description: "s035 3.2.4.3_orbital_4f_-1", // Nepovinný popis
+  path: "/chemie/chemie1/3dmodely/s035_3.2.4.3_orbital_4f_-1", // Opravená absolutní cesta
+},
+{
+  name: "Interaktivní 3D model",
+  description: "s035 3.2.4.4_orbital_4f_0", // Nepovinný popis
+  path: "/chemie/chemie1/3dmodely/s035_3.2.4.4_orbital_4f_0", // Opravená absolutní cesta
+},
+
  
   {     
     name: "Interaktivní 3D model",     
