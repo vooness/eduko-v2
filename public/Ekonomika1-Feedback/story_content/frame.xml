@@ -6,8 +6,6 @@
     <layout name="npxnabnsnfns00001000101" font="Open Sans SemiBold" controllayout="npxnabnsnfns00001000101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
     <layout name="npnxnanbnsnfns00001000101" font="Open Sans SemiBold" controllayout="npnxnanbnsnfns00001000101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
     <layout name="pxabnsnfns00001000100" font="Open Sans SemiBold" controllayout="pxabnsnfns00001000100" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
-    <layout name="npnxnanbsnfns00001100101" font="Open Sans SemiBold" controllayout="npnxnanbsnfns00001100101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
-    <layout name="pxabnsnfns00001100101" font="Open Sans SemiBold" controllayout="pxabnsnfns00001100101" colorscheme="pxabnsnfns00001000101" string_table="pxabnsnfns00001000101" />
   </layouts>
   <control_options>
     <optiongroups>
@@ -15,7 +13,7 @@
         <options>
           <option name="title_enabled" value="true">
             <options>
-              <option name="title_text" value="Ekonomika1-Feedback ( v 5 )" />
+              <option name="title_text" value="Ekonomika1-Feedback ( v 4 )" />
             </options>
           </option>
           <option name="logo_enabled" value="false">
@@ -29,7 +27,7 @@
           </option>
           <optionlist name="tabs">
             <listitems>
-              <listitem name="resources" value="true" group="linkright" />
+              <listitem name="resources" value="false" group="linkright" />
               <listitem name="outline" value="true" group="sidebar" />
               <listitem name="glossary" value="false" group="sidebar" />
               <listitem name="transcript" value="false" group="sidebar" />
@@ -46,6 +44,7 @@
             </options>
           </option>
           <option name="logoAltText" />
+          <option name="logoAltTextEnabled" value="true" />
         </options>
       </optiongroup>
       <optiongroup name="menuoptions">
@@ -224,56 +223,6 @@
         </controls>
       </control>
       <control name="close_btn" enabled="false" />
-    </control_layout>
-    <control_layout name="npnxnanbsnfns00001100101">
-      <control name="volume" enabled="true" />
-      <control name="seekbar" enabled="false" />
-      <control name="replay" enabled="false" />
-      <control name="pauseplay" enabled="false" />
-      <control name="logo" enabled="false" />
-      <control name="previous" enabled="false" />
-      <control name="next" enabled="false" />
-      <control name="swipeleft" enabled="false" />
-      <control name="swiperight" enabled="false" />
-      <control name="fullScreenToggle" enabled="false" />
-      <control name="playbackSpeedControl" enabled="false" />
-      <control name="submit" enabled="true" />
-      <control name="finish" enabled="false" />
-      <control name="submitall" enabled="false" />
-      <control name="resources" enabled="true" />
-      <control name="glossary" enabled="false" />
-      <control name="transcript" enabled="false" />
-      <control name="outline" enabled="true">
-        <controls>
-          <control name="search" enabled="false" />
-        </controls>
-      </control>
-      <control name="close_btn" enabled="true" />
-    </control_layout>
-    <control_layout name="pxabnsnfns00001100101">
-      <control name="volume" enabled="true" />
-      <control name="seekbar" enabled="false" />
-      <control name="replay" enabled="false" />
-      <control name="pauseplay" enabled="false" />
-      <control name="logo" enabled="false" />
-      <control name="previous" enabled="true" />
-      <control name="next" enabled="true" />
-      <control name="swipeleft" enabled="true" />
-      <control name="swiperight" enabled="true" />
-      <control name="fullScreenToggle" enabled="false" />
-      <control name="playbackSpeedControl" enabled="false" />
-      <control name="submit" enabled="false" />
-      <control name="finish" enabled="false" />
-      <control name="submitall" enabled="false" />
-      <control name="resources" enabled="true" />
-      <control name="glossary" enabled="false" />
-      <control name="transcript" enabled="false" />
-      <control name="outline" enabled="true">
-        <controls>
-          <control name="search" enabled="false" />
-        </controls>
-      </control>
-      <control name="close_btn" enabled="true" />
     </control_layout>
   </control_layouts>
   <colorschemes>
@@ -1505,6 +1454,7 @@
       <string id="closed_captions">Titulky</string>
       <string id="closedcaptions_shortcut">Zapnout/vypnout popisky</string>
       <string id="comma_key">Čárka</string>
+      <string id="continue">Pokračujte</string>
       <string id="continueresponsive">Pokračujte</string>
       <string id="ctrl_key">Ctrl</string>
       <string id="desktop_start">Zahájit kurz</string>
@@ -1527,6 +1477,7 @@
       <string id="next">DALŠÍ</string>
       <string id="next_shortcut">Další</string>
       <string id="outline">Nabídka</string>
+      <string id="outline_container">Nabídka</string>
       <string id="period_key">Tečka</string>
       <string id="playback_speed_normal">Normální</string>
       <string id="playback_speed_title">Rychlost přehrávání</string>
@@ -1595,7 +1546,15 @@
       <string id="video_transcript_select_track">Vybrat stopu</string>
       <string id="video_transcript_title">Přepisy</string>
       <string id="zoom_to_fit">Přizpůsobit velikosti</string>
-      <string id="continue">Pokračujte</string>
+      <string id="invalid_prompt_button">OK</string>
+      <string id="invalid_prompt_message">Před odesláním je třeba odpovědět na otázku.</string>
+      <string id="invalid_prompt_title">Nesprávná odpověď</string>
+      <string id="print_prompt_button">OK</string>
+      <string id="print_prompt_title">Napište jméno</string>
+      <string id="print_prompt_message">Do následujícího pole napište své jméno:</string>
+      <string id="timer_prompt_button">OK</string>
+      <string id="timer_prompt_title">Překročili jste časový limit</string>
+      <string id="timer_prompt_message">Časový limit stanovený pro kvíz vypršel. Stisknutím tlačítka OK budete pokračovat.</string>
     </string_table>
   </string_tables>
   <fonts>
@@ -1618,10 +1577,10 @@
             <slidelink slideid="_player.5btqwRw4Ira.5wCaxsfLXvg" displaytext="Otázka č. 3" expand="false" type="slide" />
             <slidelink slideid="_player.5btqwRw4Ira.5gpm9iBA62B" displaytext=" Otázka č. 4" expand="false" type="slide" />
             <slidelink slideid="_player.5btqwRw4Ira.5kvwA2Niuo4" displaytext="Otázka č. 5" expand="false" type="slide" />
-            <slidelink slideid="_player.5btqwRw4Ira.5W8Vp6NrteB" displaytext="Otázka č. 6" expand="false" type="slide" />
-            <slidelink slideid="_player.5btqwRw4Ira.5lLWfqbylWT" displaytext="Otázka č. 7" expand="false" type="slide" />
-            <slidelink slideid="_player.5btqwRw4Ira.6WHJvz9EouA" displaytext="Otázka č. 8" expand="false" type="slide" />
-            <slidelink slideid="_player.5btqwRw4Ira.66SjsYisdWT" displaytext="Otázka č. 9" expand="false" type="slide" />
+            <slidelink slideid="_player.5btqwRw4Ira.6d0PjXcf1I7" displaytext="Otázka č. 6" expand="false" type="slide" />
+            <slidelink slideid="_player.5btqwRw4Ira.63xBKd4tYg6" displaytext="Otázka č. 7" expand="false" type="slide" />
+            <slidelink slideid="_player.5btqwRw4Ira.5iBzGY91qUw" displaytext="Otázka č. 8" expand="false" type="slide" />
+            <slidelink slideid="_player.5btqwRw4Ira.69IMMKagmw1" displaytext="Otázka č. 9" expand="false" type="slide" />
             <slidelink slideid="_player.5btqwRw4Ira.5ybAPFyRYBq" displaytext="Otázka č.10" expand="false" type="slide" />
             <slidelink slideid="_player.5btqwRw4Ira.5ilyRBfc89r" displaytext="Otázka č. 11" expand="false" type="slide" />
             <slidelink slideid="_player.5btqwRw4Ira.5YczVQr2oLw" displaytext="Otázka č. 12" expand="false" type="slide" />
@@ -1630,7 +1589,7 @@
       </links>
     </outline>
   </nav_data>
-  <resource_data description="&lt;p align='left'&gt;&lt;font face='Open Sans SemiBold' style='font-size: 11px;' size='11' color='#BABBBA'&gt;Here are some useful links and documents:&lt;/font&gt;&lt;/p&gt;" />
+  <resource_data description="" />
   <transcript_data />
   <glossary_data />
 </bwFrame>

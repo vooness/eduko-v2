@@ -101,19 +101,17 @@ window.Script14 = function()
 {
   var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
 var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
-
-gsap.set(incorrectCheckmark, { opacity: 0 });
-gsap.set(correctCheckmark, { opacity: 0 });
-
-
+gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(correctCheckmark, { opacity: 1 });
 }
 
 window.Script15 = function()
 {
   var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
 var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
-gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(incorrectCheckmark, { opacity: 0 });
 gsap.set(correctCheckmark, { opacity: 1 });
+
 }
 
 window.Script16 = function()
@@ -134,6 +132,76 @@ gsap.set(correctCheckmark, { opacity: 1 });
 }
 
 window.Script18 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 0 });
+gsap.set(correctCheckmark, { opacity: 1 });
+
+}
+
+window.Script19 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(correctCheckmark, { opacity: 1 });
+}
+
+window.Script20 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 0 });
+gsap.set(correctCheckmark, { opacity: 1 });
+
+}
+
+window.Script21 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(correctCheckmark, { opacity: 1 });
+}
+
+window.Script22 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+
+gsap.set(incorrectCheckmark, { opacity: 0 });
+gsap.set(correctCheckmark, { opacity: 0 });
+
+
+}
+
+window.Script23 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(correctCheckmark, { opacity: 1 });
+}
+
+window.Script24 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 0 });
+gsap.set(correctCheckmark, { opacity: 1 });
+
+}
+
+window.Script25 = function()
+{
+  var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
+var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
+gsap.set(incorrectCheckmark, { opacity: 1 });
+gsap.set(correctCheckmark, { opacity: 1 });
+}
+
+window.Script26 = function()
 {
   var incorrectCheckmark = document.querySelectorAll('[data-acc-text="tick_incorrect"]');
 var correctCheckmark = document.querySelectorAll('[data-acc-text="tick_correct"]');
